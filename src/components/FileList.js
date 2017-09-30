@@ -1,26 +1,28 @@
 import React from 'react'
 import PropTypes from 'prop-types'
+import FileItem from './FileItem'
 
-function Component({ files }) {
+function FileList({ files }) {
   return (
-    <ul>
+    <ul className="m0">
       {files.map(file => (
-        <div>
-          <img className="file-logo" src={file.logoUrl} alt="File logo" />
-          <span>{file.name}</span>
-        </div>
+        <a href="" className="text-decoration-none">
+          <li>
+            <FileItem key={file.name} {...file} />
+          </li>
+        </a>
       ))}
     </ul>
   )
 }
 
-Component.propTypes = {
+FileList.propTypes = {
   files: PropTypes.arrayOf(
     PropTypes.shape({
       name: PropTypes.string,
-      logoUrl: PropTypes.string,
+      icon: PropTypes.string,
     })
   ).isRequired,
 }
 
-export default Component
+export default FileList

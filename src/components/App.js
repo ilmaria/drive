@@ -1,14 +1,19 @@
 import React from 'react'
+import '../css/basscss.css'
+import '../css/app.css'
 import Navbar from './Navbar'
 import FileList from './FileList'
 
-class Component extends React.Component {
+class App extends React.Component {
   constructor(props) {
     super(props)
     this.state = {
       files: [],
       error: null,
     }
+
+    this.openMenu = this.openMenu.bind(this)
+    this.startSearch = this.startSearch.bind(this)
   }
 
   componentDidMount() {
@@ -21,14 +26,21 @@ class Component extends React.Component {
     })
   }
 
+  openMenu() {}
+
+  startSearch() {}
+
   render() {
     return (
-      <main>
-        <Navbar />
+      <div>
+        <Navbar
+          menuCallback={this.openMenu}
+          searchCallback={this.startSearch}
+        />
         <FileList files={this.state.files} />
-      </main>
+      </div>
     )
   }
 }
 
-export default Component
+export default App
