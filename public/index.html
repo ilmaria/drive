@@ -21,6 +21,8 @@
       Learn how to configure a non-root public URL by running `npm run build`.
     -->
   <title>Drive Home</title>
+
+  </script>
 </head>
 
 <body>
@@ -29,15 +31,24 @@
   </noscript>
   <div id="root"></div>
   <!--
-      This HTML file is a template.
-      If you open it directly in the browser, you will see an empty page.
+    This HTML file is a template.
+    If you open it directly in the browser, you will see an empty page.
 
-      You can add webfonts, meta tags, or analytics to this file.
-      The build step will place the bundled scripts into the <body> tag.
+    You can add webfonts, meta tags, or analytics to this file.
+    The build step will place the bundled scripts into the <body> tag.
 
-      To begin the development, run `npm start` or `yarn start`.
-      To create a production bundle, use `npm run build` or `yarn build`.
-    -->
+    To begin the development, run `npm start` or `yarn start`.
+    To create a production bundle, use `npm run build` or `yarn build`.
+  -->
+
+  <script>
+    window.isGoogleApiReady = new Promise()
+
+    function googleApiReady() {
+      window.isGoogleApiReady = Promise.resolve()
+    }
+  </script>
+  <script async defer src="https://apis.google.com/js/api.js" onload="googleApiReady()"></script>
 </body>
 
 </html>
