@@ -1,30 +1,68 @@
 const CLIENT_ID = '<YOUR_CLIENT_ID>'
 const API_KEY = '<YOUR_API_KEY>'
+const READ_SCOPE = 'https://www.googleapis.com/auth/drive.readonly'
+const WRITE_SCOPE = 'https://www.googleapis.com/auth/drive'
 
-const DISCOVERY_DOCS = [
-  'https://www.googleapis.com/discovery/v1/apis/drive/v3/rest',
-]
+export default class GoogleApi {
+  constructor() {
+    this._loggedIn = false
+    this._client = null
+    this._auth = null
+  }
 
-const SCOPES = 'https://www.googleapis.com/auth/drive.metadata.readonly'
+  async _login(signInCallback) {
+    await window.isGoogleApiReady
+    const google = window.gapi
 
-export async function initClient(signInCallback) {
-  await window.isGoogleApiReady
-  const google = window.gapi
+    await new Promise((resolve, reject) => {
+      google.load('client:auth2', resolve())
+    })
 
-  await new Promise((resolve, reject) => {
-    google.load('client:auth2', resolve())
-  })
+    this._client = google.client
 
-  await google.client.init({
-    apiKey: API_KEY,
-    clientId: CLIENT_ID,
-    discoveryDocs: DISCOVERY_DOCS,
-    scope: SCOPES,
-  })
+    await this._client.init({
+      apiKey: API_KEY,
+      clientId: CLIENT_ID,
+      scope: READ_SCOPE
+    })
 
-  const signedIn = google.auth2.getAuthInstance().isSignedIn
-  // Listen for sign-in state changes.
-  signedIn.listen(signInCallback)
-  // Handle the initial sign-in state.
-  signInCallback(signedIn.get())
+    this._auth = google.auth2.getAuthInstance()
+    this._loggedIn = auth.isSignedIn.get()
+
+    // Listen for sign-in state changes.
+    auth.isSignedIn.listen(signedIn => {
+      this._loggedIn = signedIn
+    })
+  }
+
+  async listFiles(id) {
+    if (!this._loggedIn) {
+      await this._login()
+    }
+
+    return this._listFilesWithParams(id, {})
+  }
+
+  async _listFilesWithParams(id, params) {
+    try {
+      const resp = await this._client.request({
+        path: 'https://www.googleapis.com/drive/v3/files',
+        params: {
+          corpora: 'user',
+          orderBy: 'name',
+          q: `'${id}' in parents`,
+          fields: 'files(id, name, kind, modifiedTime), nextPageToken',
+          ...params
+        }
+      })
+
+      return resp.nextPageToken
+        ? resp.files.concat(
+            this._listFilesWithParams(id, { pageToken: resp.nextPageToken })
+          )
+        : resp.files
+    } catch (e) {
+      return []
+    }
+  }
 }
