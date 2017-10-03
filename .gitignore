@@ -7,6 +7,8 @@ yarn-error.log*
 
 .vscode/
 
+build/
+
 # Runtime data
 pids
 *.pid
@@ -58,4 +60,5 @@ typings/
 
 # dotenv environment variables file
 .env
+.env.*
 

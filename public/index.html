@@ -42,7 +42,7 @@
   -->
 
   <script>
-    window.isGoogleApiReady = new Promise()
+    window.isGoogleApiReady = new Promise((a, b) => { })
 
     function googleApiReady() {
       window.isGoogleApiReady = Promise.resolve()
