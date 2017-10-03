@@ -6,9 +6,9 @@ function FileList({ files }) {
   return (
     <ul className="m0">
       {files.map(file => (
-        <a href="" className="text-decoration-none">
+        <a href="" className="text-decoration-none" key={file.name}>
           <li>
-            <FileItem key={file.name} {...file} />
+            <FileItem {...file} />
           </li>
         </a>
       ))}

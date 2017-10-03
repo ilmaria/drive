@@ -3,12 +3,11 @@ const WRITE_SCOPE = 'https://www.googleapis.com/auth/drive'
 
 export default class GoogleApi {
   constructor() {
-    this._loggedIn = false
     this._client = null
-    this._auth = null
+    this._authInstance = null
   }
 
-  async _login() {
+  async init(signInCallback) {
     try {
       await window.isGoogleApiReady
       const google = window.gapi
@@ -19,53 +18,52 @@ export default class GoogleApi {
 
       this._client = google.client
 
-      await this._client
-        .init({
-          apiKey: process.env.API_KEY,
-          clientId: process.env.CLIENT_ID,
-          scope: READ_SCOPE,
-        })
-        .then(() => {
-          console.log('instance', google.auth2.getAuthInstance())
-        })
+      await this._client.init({
+        apiKey: process.env.REACT_APP_API_KEY,
+        clientId: process.env.REACT_APP_CLIENT_ID,
+        scope: READ_SCOPE,
+      })
 
       console.log('login, init done')
 
-      this._auth = google.auth2
-      console.log(google.auth2)
-      console.log(google.auth2.getAuthInstance())
+      console.log('API_KEY "' + process.env.REACT_APP_API_KEY + '"')
+      console.log('CLIENT_ID "' + process.env.REACT_APP_CLIENT_ID + '"')
 
-      await google.auth2
-        .init({
-          client_id: process.env.CLIENT_ID,
-          scope: READ_SCOPE,
-        })
-        .then(() => {
-          console.log('instance 2', google.auth2.getAuthInstance())
-        })
+      this._authInstance = google.auth2.getAuthInstance()
+      console.log(this._authInstance)
 
-      this._loggedIn = this._auth.getAuthInstance().isSignedIn.get()
-
-      console.log('before return 0')
+      signInCallback(this._authInstance.isSignedIn.get())
+      console.log('callback listener')
       // Listen for sign-in state changes.
-      this._auth.getAuthInstance().isSignedIn.listen(signedIn => {
-        this._loggedIn = signedIn
-      })
+      this._authInstance.isSignedIn.listen(signInCallback)
 
-      console.log('before return')
+      console.log('after callbacks')
+
+      console.log('before true return')
 
       return true
     } catch (err) {
-      console.log('Error during login:', err)
-      return false
+      console.error('Error during login:', err)
+      return err
     }
   }
 
-  async listFiles(id) {
+  async login() {
+    if (this._authInstance) {
+      return this._authInstance.signIn()
+    }
+
+    return false
+  }
+
+  listFiles(id) {
     console.log('list files')
-    if (!this._loggedIn) {
+    if (!this._authInstance) {
+      return Promise.reject('Auth insatance was not initialized')
+    }
+    if (!this._authInstance.isSignedIn.get()) {
       console.log('list files, not logged in')
-      await this._login()
+      return Promise.reject('Not logged in')
     }
 
     console.log('returning files')
@@ -74,7 +72,7 @@ export default class GoogleApi {
 
   async _listFilesWithParams(id, params) {
     try {
-      const resp = await this._client.request({
+      const response = await this._client.request({
         path: 'https://www.googleapis.com/drive/v3/files',
         params: {
           corpora: 'user',
@@ -84,14 +82,15 @@ export default class GoogleApi {
           ...params,
         },
       })
+      const result = response.result
 
-      return resp.nextPageToken
-        ? resp.files.concat(
-            this._listFilesWithParams(id, { pageToken: resp.nextPageToken })
+      return result.nextPageToken
+        ? result.files.concat(
+            this._listFilesWithParams(id, { pageToken: result.nextPageToken })
           )
-        : resp.files
+        : result.files
     } catch (e) {
-      console.log('get files error', e)
+      console.error('get files error', e)
       return []
     }
   }

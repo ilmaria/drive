@@ -4,6 +4,7 @@ import '../css/app.css'
 import Navbar from './Navbar'
 import FileList from './FileList'
 import GoogleApi from '../GoogleApi'
+import googleButton from '../images/google-button.svg'
 
 class App extends React.Component {
   constructor(props) {
@@ -11,21 +12,30 @@ class App extends React.Component {
     this.state = {
       files: [],
       error: null,
+      loggedIn: false,
     }
 
     this.googleApi = new GoogleApi()
 
     this.openMenu = this.openMenu.bind(this)
     this.startSearch = this.startSearch.bind(this)
+    this.login = this.login.bind(this)
   }
 
   componentDidMount() {
     this.googleApi
-      .listFiles('root')
-      .then(fileList => {
-        this.setState({ files: fileList })
+      .init(isSignedIn => {
+        console.log('setting login state in App')
+        this.setState({ loggedIn: isSignedIn })
+
+        if (isSignedIn) {
+          this.googleApi.listFiles('root').then(fileList => {
+            this.setState({ files: fileList })
+          })
+        }
       })
       .catch(err => {
+        console.error(err)
         this.error = err
       })
   }
@@ -34,6 +44,11 @@ class App extends React.Component {
 
   startSearch() {}
 
+  async login() {
+    console.log('login from App')
+    this.googleApi.login()
+  }
+
   render() {
     return (
       <div>
@@ -41,7 +56,13 @@ class App extends React.Component {
           menuCallback={this.openMenu}
           searchCallback={this.startSearch}
         />
-        <FileList files={this.state.files} />
+        {this.state.loggedIn ? (
+          <FileList files={this.state.files} />
+        ) : (
+          <button className="google-sign-in" onClick={this.login}>
+            <img src={googleButton} alt="Sign in with Google" />
+          </button>
+        )}
       </div>
     )
   }

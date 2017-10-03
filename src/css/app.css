@@ -1,6 +1,7 @@
 :root {
   --primary-color: #85144b;
   --text-color: #322;
+  --text-color-white: #eee;
 }
 
 body {
@@ -36,6 +37,16 @@ ul {
   padding-left: 0.5em;
   line-height: 3em;
   color: var(--text-color);
+}
+
+.google-sign-in {
+  border: none;
+  background: transparent;
+  cursor: pointer;
+}
+
+.google-sign-in img {
+  margin: 0;
 }
 
 @media (min-width: 40em) {
