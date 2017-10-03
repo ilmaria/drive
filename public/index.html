@@ -20,7 +20,7 @@
       work correctly both with client-side routing and a non-root public URL.
       Learn how to configure a non-root public URL by running `npm run build`.
     -->
-  <title>Drive Home</title>
+  <title>Drive Easy</title>
 
   </script>
 </head>
@@ -42,13 +42,11 @@
   -->
 
   <script>
-    window.isGoogleApiReady = new Promise((a, b) => { })
-
-    function googleApiReady() {
-      window.isGoogleApiReady = Promise.resolve()
-    }
+    window.isGoogleApiReady = new Promise((resolve, reject) => {
+      window.resolveGoogleApi = resolve
+    })
   </script>
-  <script async defer src="https://apis.google.com/js/api.js" onload="googleApiReady()"></script>
+  <script async defer src="https://apis.google.com/js/api.js" onload="resolveGoogleApi()"></script>
 </body>
 
 </html>

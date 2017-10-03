@@ -10,9 +10,9 @@ class App extends React.Component {
   constructor(props) {
     super(props)
     this.state = {
-      files: [],
+      user: null,
+      currentDir: 'root',
       error: null,
-      loggedIn: false,
     }
 
     this.googleApi = new GoogleApi()
@@ -24,15 +24,9 @@ class App extends React.Component {
 
   componentDidMount() {
     this.googleApi
-      .init(isSignedIn => {
-        console.log('setting login state in App')
-        this.setState({ loggedIn: isSignedIn })
-
-        if (isSignedIn) {
-          this.googleApi.listFiles('root').then(fileList => {
-            this.setState({ files: fileList })
-          })
-        }
+      .init(user => {
+        this.setState({ user })
+        console.log('user', user)
       })
       .catch(err => {
         console.error(err)
@@ -45,7 +39,6 @@ class App extends React.Component {
   startSearch() {}
 
   async login() {
-    console.log('login from App')
     this.googleApi.login()
   }
 
@@ -56,8 +49,12 @@ class App extends React.Component {
           menuCallback={this.openMenu}
           searchCallback={this.startSearch}
         />
-        {this.state.loggedIn ? (
-          <FileList files={this.state.files} />
+        {this.state.user ? (
+          <FileList
+            userId={this.state.user.id}
+            currentDir={'root'}
+            getFileList={this.googleApi.listFiles}
+          />
         ) : (
           <button className="google-sign-in" onClick={this.login}>
             <img src={googleButton} alt="Sign in with Google" />

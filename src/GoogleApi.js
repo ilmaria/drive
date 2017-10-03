@@ -3,43 +3,57 @@ const WRITE_SCOPE = 'https://www.googleapis.com/auth/drive'
 
 export default class GoogleApi {
   constructor() {
-    this._client = null
-    this._authInstance = null
+    this.resolveClient = function() {}
+    this.resolveAuthInstance = function() {}
+
+    this._client = new Promise(resolve => {
+      console.log('client promise')
+      this.resolveClient = resolve
+    })
+    this._authInstance = new Promise(resolve => {
+      this.resolveClient = resolve
+    })
   }
 
-  async init(signInCallback) {
+  async init(userChangeCallback) {
     try {
+      console.log('init')
       await window.isGoogleApiReady
       const google = window.gapi
+      console.log('ready')
 
-      await new Promise((resolve, reject) => {
-        google.load('client:auth2', resolve)
+      google.load('client:auth2', () => {
+        console.log('resolve func', this.resolveClient.toString())
+        this.resolveClient(google.client)
+        console.log('client resolved')
       })
 
-      this._client = google.client
-
-      await this._client.init({
+      const client = await this._client
+      console.log('client', client)
+      await client.init({
         apiKey: process.env.REACT_APP_API_KEY,
         clientId: process.env.REACT_APP_CLIENT_ID,
         scope: READ_SCOPE,
       })
 
-      console.log('login, init done')
+      const authInstance = google.auth2.getAuthInstance()
+      this.resolveAuthInstance(authInstance)
+      console.log('auth resolved')
 
-      console.log('API_KEY "' + process.env.REACT_APP_API_KEY + '"')
-      console.log('CLIENT_ID "' + process.env.REACT_APP_CLIENT_ID + '"')
+      const callback = user => {
+        const profile = user.getBasicProfile()
+        userChangeCallback({
+          id: profile.getId(),
+          name: profile.getName(),
+          imageUrl: profile.getImageUrl(),
+          email: profile.getEmail(),
+        })
+      }
 
-      this._authInstance = google.auth2.getAuthInstance()
-      console.log(this._authInstance)
-
-      signInCallback(this._authInstance.isSignedIn.get())
-      console.log('callback listener')
-      // Listen for sign-in state changes.
-      this._authInstance.isSignedIn.listen(signInCallback)
-
-      console.log('after callbacks')
-
-      console.log('before true return')
+      // Initial call to this callback
+      callback(authInstance.currentUser.get())
+      // Listen for future user changes.
+      authInstance.currentUser.listen(callback)
 
       return true
     } catch (err) {
@@ -49,36 +63,37 @@ export default class GoogleApi {
   }
 
   async login() {
-    if (this._authInstance) {
-      return this._authInstance.signIn()
-    }
-
-    return false
+    const auth = await this._authInstance
+    return auth.signIn()
   }
 
-  listFiles(id) {
-    console.log('list files')
-    if (!this._authInstance) {
-      return Promise.reject('Auth insatance was not initialized')
-    }
-    if (!this._authInstance.isSignedIn.get()) {
-      console.log('list files, not logged in')
+  async listFiles(id) {
+    const auth = await this._authInstance
+
+    if (!auth.isSignedIn.get()) {
       return Promise.reject('Not logged in')
     }
 
-    console.log('returning files')
     return this._listFilesWithParams(id, {})
   }
 
   async _listFilesWithParams(id, params) {
     try {
-      const response = await this._client.request({
+      const client = await this._client
+      const response = await client.request({
         path: 'https://www.googleapis.com/drive/v3/files',
         params: {
           corpora: 'user',
           orderBy: 'name',
           q: `'${id}' in parents`,
-          fields: 'files(id, name, kind, modifiedTime), nextPageToken',
+          fields: `files(${[
+            'id',
+            'name',
+            'kind',
+            'modifiedTime',
+            'iconLink',
+            'webViewLink',
+          ].join()}), nextPageToken`,
           ...params,
         },
       })
@@ -89,8 +104,8 @@ export default class GoogleApi {
             this._listFilesWithParams(id, { pageToken: result.nextPageToken })
           )
         : result.files
-    } catch (e) {
-      console.error('get files error', e)
+    } catch (err) {
+      console.error('Could not get files from Google Drive', err)
       return []
     }
   }
