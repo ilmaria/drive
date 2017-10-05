@@ -1,4 +1,5 @@
 import React from 'react'
+import { BrowserRouter as Router, Route } from 'react-router-dom'
 import '../css/basscss.css'
 import '../css/app.css'
 import Navbar from './Navbar'
@@ -50,26 +51,35 @@ class App extends React.Component {
     const loggedOut = this.state.user && !this.state.user.id
 
     return (
-      <div>
-        <Navbar
-          menuCallback={this.openMenu}
-          searchCallback={this.startSearch}
-        />
-        {this.state.user && (
-          <FileList
-            userId={this.state.user.id}
-            currentDir={'root'}
-            getFileList={
-              this.state.googleApi ? this.state.googleApi.listFiles : null
-            }
+      <Router>
+        <div>
+          <Navbar
+            menuCallback={this.openMenu}
+            searchCallback={this.startSearch}
           />
-        )}
-        {loggedOut && (
-          <button className="google-sign-in" onClick={this.login}>
-            <img src={googleButton} alt="Sign in with Google" />
-          </button>
-        )}
-      </div>
+          {this.state.user && (
+            <Route
+              path="/:directory?"
+              strict
+              render={({ match }) => (
+                <FileList
+                  userId={this.state.user.id}
+                  currentDir={match.params.directory}
+                  getFileList={
+                    this.state.googleApi ? this.state.googleApi.listFiles : null
+                  }
+                />
+              )}
+            />
+          )}
+
+          {loggedOut && (
+            <button className="google-sign-in" onClick={this.login}>
+              <img src={googleButton} alt="Sign in with Google" />
+            </button>
+          )}
+        </div>
+      </Router>
     )
   }
 }

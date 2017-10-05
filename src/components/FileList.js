@@ -1,11 +1,12 @@
 import React from 'react'
 import PropTypes from 'prop-types'
+import { Link } from 'react-router-dom'
 import FileItem from './FileItem'
 
 class FileList extends React.Component {
   constructor(props) {
     super(props)
-    const key = props.userId + props.currentDir
+    const key = props.userId + props.currentDir || 'root'
 
     this.state = {
       files: JSON.parse(localStorage.getItem(key)),
@@ -27,6 +28,7 @@ class FileList extends React.Component {
     const newFiles = nextState.files
 
     return !(
+      this.props.currentDir === nextProps.currentDir &&
       oldFiles &&
       newFiles &&
       oldFiles.length === newFiles.length &&
@@ -34,19 +36,14 @@ class FileList extends React.Component {
     )
   }
 
-  componentWillReceiveProps({ userId, currentDir }) {
-    this.updateFiles(userId, currentDir)
+  componentWillReceiveProps({ userId, currentDir, getFileList }) {
+    this.updateFiles(userId, currentDir, getFileList)
   }
 
-  componentDidUpdate({ userId, currentDir, getFileList }) {
-    if (getFileList !== this.props.getFileList) {
-      this.updateFiles(userId, currentDir, this.props.getFileList)
-    }
-  }
+  updateFiles(userId, dir, getFileList) {
+    if (!userId) return
 
-  updateFiles(userId, currentDir, getFileList) {
-    if (!userId || !currentDir) return
-
+    const currentDir = dir || 'root'
     const key = userId + currentDir
     const files = JSON.parse(localStorage.getItem(key))
 
@@ -65,18 +62,25 @@ class FileList extends React.Component {
       return <p>Loading files...</p>
     }
 
+    const ALink = ({ file, children }) =>
+      file.mimeType === 'application/vnd.google-apps.folder' ? (
+        <Link to={file.id} className="text-decoration-none">
+          {children}
+        </Link>
+      ) : (
+        <a href={file.webViewLink} className="text-decoration-none">
+          {children}
+        </a>
+      )
+
     return (
       <ul className="m0 px2">
         {this.state.files.map(file => (
-          <a
-            href={file.webViewLink}
-            className="text-decoration-none"
-            key={file.name}
-          >
+          <ALink file={file} key={file.name}>
             <li>
               <FileItem {...file} />
             </li>
-          </a>
+          </ALink>
         ))}
       </ul>
     )
@@ -85,7 +89,7 @@ class FileList extends React.Component {
 
 FileList.propTypes = {
   userId: PropTypes.string.isRequired,
-  currentDir: PropTypes.string.isRequired,
+  currentDir: PropTypes.string,
   getFileList: PropTypes.func,
 }
 

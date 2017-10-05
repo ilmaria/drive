@@ -77,7 +77,7 @@ export default class GoogleApi {
           fields: `files(${[
             'id',
             'name',
-            'kind',
+            'mimeType',
             'modifiedTime',
             'iconLink',
             'webViewLink',
