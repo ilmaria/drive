@@ -3,42 +3,35 @@ const WRITE_SCOPE = 'https://www.googleapis.com/auth/drive'
 
 export default class GoogleApi {
   constructor() {
-    this.resolveClient = function() {}
-    this.resolveAuthInstance = function() {}
+    this.client = null
+    this.authInstance = null
 
-    this._client = new Promise(resolve => {
-      console.log('client promise')
-      this.resolveClient = resolve
-    })
-    this._authInstance = new Promise(resolve => {
-      this.resolveClient = resolve
-    })
+    this.init = this.init.bind(this)
+    this.login = this.login.bind(this)
+    this.listFiles = this.listFiles.bind(this)
   }
 
+  /**
+   * This class has to be initialized before any of its methods can be used.
+   * @param {*} userChangeCallback 
+   */
   async init(userChangeCallback) {
     try {
-      console.log('init')
       await window.isGoogleApiReady
       const google = window.gapi
-      console.log('ready')
 
-      google.load('client:auth2', () => {
-        console.log('resolve func', this.resolveClient.toString())
-        this.resolveClient(google.client)
-        console.log('client resolved')
+      await new Promise(resolve => {
+        google.load('client:auth2', resolve)
       })
 
-      const client = await this._client
-      console.log('client', client)
-      await client.init({
+      this.client = google.client
+      await this.client.init({
         apiKey: process.env.REACT_APP_API_KEY,
         clientId: process.env.REACT_APP_CLIENT_ID,
         scope: READ_SCOPE,
       })
 
-      const authInstance = google.auth2.getAuthInstance()
-      this.resolveAuthInstance(authInstance)
-      console.log('auth resolved')
+      this.authInstance = google.auth2.getAuthInstance()
 
       const callback = user => {
         const profile = user.getBasicProfile()
@@ -51,26 +44,22 @@ export default class GoogleApi {
       }
 
       // Initial call to this callback
-      callback(authInstance.currentUser.get())
+      callback(this.authInstance.currentUser.get())
       // Listen for future user changes.
-      authInstance.currentUser.listen(callback)
-
-      return true
+      this.authInstance.currentUser.listen(callback)
     } catch (err) {
       console.error('Error during login:', err)
-      return err
     }
+
+    return this
   }
 
   async login() {
-    const auth = await this._authInstance
-    return auth.signIn()
+    return this.authInstance.signIn()
   }
 
   async listFiles(id) {
-    const auth = await this._authInstance
-
-    if (!auth.isSignedIn.get()) {
+    if (!this.authInstance.isSignedIn.get()) {
       return Promise.reject('Not logged in')
     }
 
@@ -79,8 +68,7 @@ export default class GoogleApi {
 
   async _listFilesWithParams(id, params) {
     try {
-      const client = await this._client
-      const response = await client.request({
+      const response = await this.client.request({
         path: 'https://www.googleapis.com/drive/v3/files',
         params: {
           corpora: 'user',

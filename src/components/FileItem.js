@@ -13,7 +13,7 @@ function FileItem({ name, iconLink }) {
         src={iconLink || fileIcon}
         alt="File logo"
       />
-      <span className="flex-auto file-item-name">{name}</span>
+      <span className="flex-auto file-item-name ellipsis">{name}</span>
     </div>
   )
 }

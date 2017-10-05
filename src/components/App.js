@@ -10,12 +10,11 @@ class App extends React.Component {
   constructor(props) {
     super(props)
     this.state = {
-      user: null,
+      user: JSON.parse(localStorage.getItem('currentUser')),
       currentDir: 'root',
       error: null,
+      googleApi: null,
     }
-
-    this.googleApi = new GoogleApi()
 
     this.openMenu = this.openMenu.bind(this)
     this.startSearch = this.startSearch.bind(this)
@@ -23,10 +22,13 @@ class App extends React.Component {
   }
 
   componentDidMount() {
-    this.googleApi
+    new GoogleApi()
       .init(user => {
         this.setState({ user })
-        console.log('user', user)
+        localStorage.setItem('currentUser', JSON.stringify(user))
+      })
+      .then(googleApi => {
+        this.setState({ googleApi })
       })
       .catch(err => {
         console.error(err)
@@ -39,23 +41,30 @@ class App extends React.Component {
   startSearch() {}
 
   async login() {
-    this.googleApi.login()
+    if (this.state.googleApi) {
+      this.state.googleApi.login()
+    }
   }
 
   render() {
+    const loggedOut = this.state.user && !this.state.user.id
+
     return (
       <div>
         <Navbar
           menuCallback={this.openMenu}
           searchCallback={this.startSearch}
         />
-        {this.state.user ? (
+        {this.state.user && (
           <FileList
             userId={this.state.user.id}
             currentDir={'root'}
-            getFileList={this.googleApi.listFiles}
+            getFileList={
+              this.state.googleApi ? this.state.googleApi.listFiles : null
+            }
           />
-        ) : (
+        )}
+        {loggedOut && (
           <button className="google-sign-in" onClick={this.login}>
             <img src={googleButton} alt="Sign in with Google" />
           </button>
