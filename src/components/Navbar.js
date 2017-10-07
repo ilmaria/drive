@@ -9,6 +9,7 @@ function Navbar({ menuCallback, searchCallback }) {
       <button className="no-btn mx2" onClick={menuCallback}>
         <img src={menuIcon} alt="Menu icon" />
       </button>
+      <input placeholder="Search" />
       <button className="no-btn mx2" onClick={searchCallback}>
         <img src={searchIcon} alt="Menu icon" />
       </button>
@@ -18,7 +19,7 @@ function Navbar({ menuCallback, searchCallback }) {
 
 Navbar.propTypes = {
   menuCallback: PropTypes.func.isRequired,
-  searchCallback: PropTypes.func.isRequired,
+  searchCallback: PropTypes.func.isRequired
 }
 
 export default Navbar
