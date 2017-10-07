@@ -59,6 +59,5 @@ typings/
 .yarn-integrity
 
 # dotenv environment variables file
-.env
-.env.*
+.env*.local
 
