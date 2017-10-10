@@ -2,6 +2,7 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import { Link } from 'react-router-dom'
 import FileItem from './FileItem'
+import Editor from './Editor'
 
 class FileList extends React.Component {
   constructor(props) {
@@ -74,15 +75,18 @@ class FileList extends React.Component {
       )
 
     return (
-      <ul className="m0 px2">
-        {this.state.files.map(file => (
-          <ALink file={file} key={file.name}>
-            <li>
-              <FileItem {...file} />
-            </li>
-          </ALink>
-        ))}
-      </ul>
+      <div>
+        <Editor />
+        <ul className="m0 px2">
+          {this.state.files.map(file => (
+            <ALink file={file} key={file.name}>
+              <li>
+                <FileItem {...file} />
+              </li>
+            </ALink>
+          ))}
+        </ul>
+      </div>
     )
   }
 }

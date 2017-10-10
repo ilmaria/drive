@@ -33,6 +33,12 @@ ul {
   background-color: transparent;
 }
 
+.text-editor {
+  border: 1px solid black;
+  width: 400px;
+  height: 300px;
+}
+
 .file-item {
   height: 3em;
 }
