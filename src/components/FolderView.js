@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom'
 import FileItem from './FileItem'
 import Editor from './Editor'
 
-class FileList extends React.Component {
+class FolderView extends React.Component {
   constructor(props) {
     super(props)
     const key = props.userId + props.currentDir || 'root'
@@ -75,26 +75,23 @@ class FileList extends React.Component {
       )
 
     return (
-      <div>
-        <Editor />
-        <ul className="m0 px2">
-          {this.state.files.map(file => (
-            <ALink file={file} key={file.name}>
-              <li>
-                <FileItem {...file} />
-              </li>
-            </ALink>
-          ))}
-        </ul>
-      </div>
+      <ul className="m0 px2">
+        {this.state.files.map(file => (
+          <ALink file={file} key={file.name}>
+            <li>
+              <FileItem {...file} />
+            </li>
+          </ALink>
+        ))}
+      </ul>
     )
   }
 }
 
-FileList.propTypes = {
+FolderView.propTypes = {
   userId: PropTypes.string.isRequired,
   currentDir: PropTypes.string,
   getFileList: PropTypes.func,
 }
 
-export default FileList
+export default FolderView

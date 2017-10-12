@@ -8,7 +8,7 @@ export default class GoogleApi {
 
     this.init = this.init.bind(this)
     this.login = this.login.bind(this)
-    this.listFiles = this.listFiles.bind(this)
+    this.getFilesInFolder = this.getFilesInFolder.bind(this)
   }
 
   /**
@@ -58,43 +58,53 @@ export default class GoogleApi {
     return this.authInstance.signIn()
   }
 
-  async listFiles(id) {
+  async getFilesInFolder(id) {
     if (!this.authInstance.isSignedIn.get()) {
       return Promise.reject('Not logged in')
     }
 
-    return this._listFilesWithParams(id, {})
+    return getFiles(this.client, {
+      orderBy: 'name',
+      q: `'${id}' in parents`,
+    })
   }
 
-  async _listFilesWithParams(id, params) {
-    try {
-      const response = await this.client.request({
-        path: 'https://www.googleapis.com/drive/v3/files',
-        params: {
-          corpora: 'user',
-          orderBy: 'name',
-          q: `'${id}' in parents`,
-          fields: `files(${[
-            'id',
-            'name',
-            'mimeType',
-            'modifiedTime',
-            'iconLink',
-            'webViewLink',
-          ].join()}), nextPageToken`,
-          ...params,
-        },
-      })
-      const result = response.result
-
-      return result.nextPageToken
-        ? result.files.concat(
-            this._listFilesWithParams(id, { pageToken: result.nextPageToken })
-          )
-        : result.files
-    } catch (err) {
-      console.error('Could not get files from Google Drive', err)
-      return []
+  async getRecentFiles() {
+    if (!this.authInstance.isSignedIn.get()) {
+      return Promise.reject('Not logged in')
     }
+
+    return getFiles(this.client, { orderBy: 'viewdByMeTime desc' })
+  }
+}
+
+async function getFiles(client, parameters = {}) {
+  try {
+    const params = {
+      corpora: 'user',
+      fields: `files(${[
+        'id',
+        'name',
+        'mimeType',
+        'modifiedTime',
+        'iconLink',
+        'webViewLink',
+      ].join()}), nextPageToken`,
+      ...parameters,
+    }
+    const response = await client.request({
+      path: 'https://www.googleapis.com/drive/v3/files',
+      params,
+    })
+    const result = response.result
+
+    return result.nextPageToken
+      ? result.files.concat(
+          getFiles(client, { pageToken: result.nextPageToken, ...params })
+        )
+      : result.files
+  } catch (err) {
+    console.error('Could not get files from Google Drive', err)
+    return []
   }
 }

@@ -3,7 +3,7 @@ import { BrowserRouter as Router, Route } from 'react-router-dom'
 import '../css/basscss.css'
 import '../css/app.css'
 import Navbar from './Navbar'
-import FileList from './FileList'
+import FolderView from './FolderView'
 import GoogleApi from '../GoogleApi'
 import googleButton from '../images/google-button.svg'
 
@@ -62,11 +62,13 @@ class App extends React.Component {
               path="/:directory?"
               strict
               render={({ match }) => (
-                <FileList
+                <FolderView
                   userId={this.state.user.id}
                   currentDir={match.params.directory}
                   getFileList={
-                    this.state.googleApi ? this.state.googleApi.listFiles : null
+                    this.state.googleApi
+                      ? this.state.googleApi.getFilesInFolder
+                      : null
                   }
                 />
               )}
