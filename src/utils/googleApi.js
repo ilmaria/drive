@@ -89,6 +89,7 @@ async function getFiles(client, parameters = {}) {
         'modifiedTime',
         'iconLink',
         'webViewLink',
+        'webContentLink',
       ].join()}), nextPageToken`,
       ...parameters,
     }

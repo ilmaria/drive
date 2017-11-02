@@ -1,8 +1,11 @@
-import React from 'react'
-import PropTypes from 'prop-types'
-import { Link } from 'react-router-dom'
-import FileItem from './FileItem'
+import './FolderView.css'
+
+import { Link, Redirect } from 'react-router-dom'
+
 import Editor from './Editor'
+import FileItem from './FileItem'
+import PropTypes from 'prop-types'
+import React from 'react'
 
 class FolderView extends React.Component {
   constructor(props) {
@@ -11,9 +14,11 @@ class FolderView extends React.Component {
 
     this.state = {
       files: JSON.parse(localStorage.getItem(key)),
+      redirect: '',
     }
 
     this.updateFiles = this.updateFiles.bind(this)
+    this.linkTo = this.linkTo.bind(this)
   }
 
   componentDidMount() {
@@ -58,30 +63,35 @@ class FolderView extends React.Component {
     }
   }
 
+  linkTo(file) {
+    return () => {
+      if (file.mimeType === 'application/vnd.google-apps.folder') {
+        this.setState({ redirect: file.id })
+      } else {
+        this.setState({ redirect: file.webViewLink })
+      }
+    }
+  }
+
   render() {
-    if (this.state.files == null) {
+    if (this.state.redirect) {
+      return <Redirect push to={this.state.redirect} />
+    } else if (this.state.files == null) {
       return <p>Loading files...</p>
     }
 
-    const ALink = ({ file, children }) =>
-      file.mimeType === 'application/vnd.google-apps.folder' ? (
-        <Link to={file.id} className="text-decoration-none">
-          {children}
-        </Link>
-      ) : (
-        <a href={file.webViewLink} className="text-decoration-none">
-          {children}
-        </a>
-      )
-
     return (
-      <ul className="m0 px2">
+      <ul className="folder-view m0 px2">
         {this.state.files.map(file => (
-          <ALink file={file} key={file.name}>
+          <div
+            onClick={this.props.onClickFile(file)}
+            onDoubleClick={this.linkTo(file)}
+            key={file.id}
+          >
             <li>
               <FileItem {...file} />
             </li>
-          </ALink>
+          </div>
         ))}
       </ul>
     )
@@ -92,6 +102,7 @@ FolderView.propTypes = {
   userId: PropTypes.string.isRequired,
   currentDir: PropTypes.string,
   getFileList: PropTypes.func,
+  onClickFile: PropTypes.func,
 }
 
 export default FolderView

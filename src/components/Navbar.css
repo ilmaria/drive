@@ -1,0 +1,17 @@
+nav {
+  height: 56px;
+  box-shadow: 0 1px 4px 0 rgba(0, 0, 0, 0.37);
+}
+
+input {
+  font-family: 'Montserrat', sans-serif;
+  border: none;
+  padding: 0.5em;
+  max-width: 58%;
+}
+
+@media (min-width: 40em) {
+  nav {
+    height: 64px;
+  }
+}

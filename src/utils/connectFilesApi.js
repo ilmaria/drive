@@ -1,8 +1,8 @@
-import React from 'react'
-import PropTypes from 'prop-types'
-import { Link } from 'react-router-dom'
-import FileItem from './FileItem'
 import Editor from './Editor'
+import FileItem from './FileItem'
+import { Link } from 'react-router-dom'
+import PropTypes from 'prop-types'
+import React from 'react'
 
 export default function connectFilesApi(Component, key) {
   class ConnectedComponent extends React.Component {

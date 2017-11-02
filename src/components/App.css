@@ -1,0 +1,33 @@
+:root {
+  /* --primary-color: #85144b; */
+  --primary-color: #fff;
+  --text-color: #322;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  font-family: 'Dosis', 'Raleway', 'Montserrat', sans-serif;
+}
+
+.no-btn {
+  border: none;
+  padding: 0px;
+  background-color: transparent;
+}
+
+.text-editor {
+  border: 1px solid black;
+  width: 400px;
+  height: 300px;
+}
+
+.google-sign-in {
+  border: none;
+  background: transparent;
+  cursor: pointer;
+}
+
+.google-sign-in img {
+  margin: 0;
+}

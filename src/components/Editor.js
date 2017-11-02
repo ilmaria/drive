@@ -1,5 +1,5 @@
-import React from 'react'
 import ContentEditable from './ContentEditable'
+import React from 'react'
 
 class Editor extends React.Component {
   constructor(props) {

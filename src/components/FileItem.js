@@ -1,7 +1,8 @@
-import React from 'react'
+import './FileItem.css'
+
 import PropTypes from 'prop-types'
+import React from 'react'
 import fileIcon from '../images/icons/file.png'
-//import folderIcon from '../images/icons/folder.svg'
 
 function FileItem({ name, iconLink }) {
   return (

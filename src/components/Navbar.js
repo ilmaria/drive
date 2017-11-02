@@ -1,5 +1,7 @@
-import React from 'react'
+import './Navbar.css'
+
 import PropTypes from 'prop-types'
+import React from 'react'
 import menuIcon from '../images/icons/menu.svg'
 import searchIcon from '../images/icons/search.svg'
 
@@ -19,7 +21,7 @@ function Navbar({ menuCallback, searchCallback }) {
 
 Navbar.propTypes = {
   menuCallback: PropTypes.func.isRequired,
-  searchCallback: PropTypes.func.isRequired
+  searchCallback: PropTypes.func.isRequired,
 }
 
 export default Navbar

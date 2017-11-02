@@ -1,10 +1,13 @@
-import React from 'react'
-import { BrowserRouter as Router, Route } from 'react-router-dom'
 import '../css/basscss.css'
-import '../css/app.css'
-import Navbar from './Navbar'
+import './App.css'
+
+import { Route, BrowserRouter as Router } from 'react-router-dom'
+
 import FolderView from './FolderView'
-import GoogleApi from '../GoogleApi'
+import GoogleApi from '../utils/googleApi'
+import Navbar from './Navbar'
+import PreviewWindow from './PreviewWindow'
+import React from 'react'
 import googleButton from '../images/google-button.svg'
 
 class App extends React.Component {
@@ -13,12 +16,14 @@ class App extends React.Component {
     this.state = {
       user: JSON.parse(localStorage.getItem('currentUser')),
       currentDir: 'root',
+      selectedFile: null,
       error: null,
       googleApi: null,
     }
 
     this.openMenu = this.openMenu.bind(this)
     this.startSearch = this.startSearch.bind(this)
+    this.selectFile = this.selectFile.bind(this)
     this.login = this.login.bind(this)
   }
 
@@ -40,6 +45,13 @@ class App extends React.Component {
   openMenu() {}
 
   startSearch() {}
+
+  selectFile(file) {
+    return () => {
+      console.log('select', file)
+      this.setState({ selectedFile: file })
+    }
+  }
 
   async login() {
     if (this.state.googleApi) {
@@ -65,6 +77,7 @@ class App extends React.Component {
                 <FolderView
                   userId={this.state.user.id}
                   currentDir={match.params.directory}
+                  onClickFile={this.selectFile}
                   getFileList={
                     this.state.googleApi
                       ? this.state.googleApi.getFilesInFolder
@@ -74,6 +87,8 @@ class App extends React.Component {
               )}
             />
           )}
+
+          <PreviewWindow {...this.state.selectedFile} />
 
           {loggedOut && (
             <button className="google-sign-in" onClick={this.login}>

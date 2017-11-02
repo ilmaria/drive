@@ -1,0 +1,19 @@
+.file-item {
+  height: 3em;
+}
+
+.ellipsis {
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
+}
+
+.file-item-name {
+  border-bottom: 1px solid #ccc;
+  margin-right: 1em;
+  margin-left: 5px;
+  padding-left: 0.5em;
+  line-height: 3em;
+  color: var(--text-color);
+  width: calc(100% - 4rem);
+}

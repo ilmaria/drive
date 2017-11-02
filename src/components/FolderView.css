@@ -1,0 +1,9 @@
+ul {
+  list-style: none;
+  padding: 0;
+}
+
+.folder-view {
+  max-width: 1200px;
+  margin: 0 auto;
+}
