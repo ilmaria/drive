@@ -1,0 +1,10 @@
+.preview-window {
+  grid-area: preview-window;
+  overflow: auto;
+}
+
+@media (max-width: 40em) {
+  .preview-window {
+    display: none;
+  }
+}

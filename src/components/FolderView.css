@@ -4,6 +4,6 @@ ul {
 }
 
 .folder-view {
-  max-width: 1200px;
-  margin: 0 auto;
+  grid-area: folder-view;
+  overflow: auto;
 }

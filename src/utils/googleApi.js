@@ -13,7 +13,7 @@ export default class GoogleApi {
 
   /**
    * This class has to be initialized before any of its methods can be used.
-   * @param {*} userChangeCallback 
+   * @param {*} userChangeCallback
    */
   async init(userChangeCallback) {
     try {
@@ -28,19 +28,22 @@ export default class GoogleApi {
       await this.client.init({
         apiKey: process.env.REACT_APP_API_KEY,
         clientId: process.env.REACT_APP_CLIENT_ID,
-        scope: READ_SCOPE,
+        scope: READ_SCOPE
       })
 
       this.authInstance = google.auth2.getAuthInstance()
 
-      const callback = user => {
-        const profile = user.getBasicProfile()
-        userChangeCallback({
-          id: profile.getId(),
-          name: profile.getName(),
-          imageUrl: profile.getImageUrl(),
-          email: profile.getEmail(),
-        })
+      const callback = googleUser => {
+        const profile = googleUser.getBasicProfile()
+        const user = profile
+          ? {
+              id: profile.getId(),
+              name: profile.getName(),
+              imageUrl: profile.getImageUrl(),
+              email: profile.getEmail()
+            }
+          : null
+        userChangeCallback(user)
       }
 
       // Initial call to this callback
@@ -65,7 +68,7 @@ export default class GoogleApi {
 
     return getFiles(this.client, {
       orderBy: 'name',
-      q: `'${id}' in parents`,
+      q: `'${id}' in parents`
     })
   }
 
@@ -89,13 +92,13 @@ async function getFiles(client, parameters = {}) {
         'modifiedTime',
         'iconLink',
         'webViewLink',
-        'webContentLink',
+        'webContentLink'
       ].join()}), nextPageToken`,
-      ...parameters,
+      ...parameters
     }
     const response = await client.request({
       path: 'https://www.googleapis.com/drive/v3/files',
-      params,
+      params
     })
     const result = response.result
 

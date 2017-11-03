@@ -18,7 +18,7 @@ class App extends React.Component {
       currentDir: 'root',
       selectedFile: null,
       error: null,
-      googleApi: null,
+      googleApi: null
     }
 
     this.openMenu = this.openMenu.bind(this)
@@ -60,42 +60,46 @@ class App extends React.Component {
   }
 
   render() {
-    const loggedOut = this.state.user && !this.state.user.id
+    const loggedIn = this.state.user
 
     return (
       <Router>
-        <div>
+        <main>
           <Navbar
+            className="header"
             menuCallback={this.openMenu}
             searchCallback={this.startSearch}
           />
-          {this.state.user && (
-            <Route
-              path="/:directory?"
-              strict
-              render={({ match }) => (
-                <FolderView
-                  userId={this.state.user.id}
-                  currentDir={match.params.directory}
-                  onClickFile={this.selectFile}
-                  getFileList={
-                    this.state.googleApi
-                      ? this.state.googleApi.getFilesInFolder
-                      : null
-                  }
-                />
-              )}
-            />
-          )}
+          <div className="folder-view">
+            {loggedIn ? (
+              <Route
+                path="/:directory?"
+                strict
+                render={({ match }) => (
+                  <FolderView
+                    userId={this.state.user.id}
+                    currentDir={match.params.directory}
+                    onClickFile={this.selectFile}
+                    getFileList={
+                      this.state.googleApi
+                        ? this.state.googleApi.getFilesInFolder
+                        : null
+                    }
+                  />
+                )}
+              />
+            ) : (
+              <button className="google-sign-in" onClick={this.login}>
+                <img src={googleButton} alt="Sign in with Google" />
+              </button>
+            )}
+          </div>
 
-          <PreviewWindow {...this.state.selectedFile} />
-
-          {loggedOut && (
-            <button className="google-sign-in" onClick={this.login}>
-              <img src={googleButton} alt="Sign in with Google" />
-            </button>
-          )}
-        </div>
+          <PreviewWindow
+            className="preview-window"
+            {...this.state.selectedFile}
+          />
+        </main>
       </Router>
     )
   }

@@ -31,3 +31,20 @@ body {
 .google-sign-in img {
   margin: 0;
 }
+
+main {
+  display: grid;
+  grid-template-columns: 1fr;
+  grid-template-rows: 56px 1fr;
+  grid-template-areas: 'header' 'folder-view';
+  height: 100vh;
+}
+
+@media (min-width: 40em) {
+  main {
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: 64px 1fr;
+    grid-template-areas: 'header header' 'folder-view preview-window';
+    grid-column-gap: 10px;
+  }
+}

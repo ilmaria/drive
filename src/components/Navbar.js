@@ -21,7 +21,7 @@ function Navbar({ menuCallback, searchCallback }) {
 
 Navbar.propTypes = {
   menuCallback: PropTypes.func.isRequired,
-  searchCallback: PropTypes.func.isRequired,
+  searchCallback: PropTypes.func.isRequired
 }
 
 export default Navbar
