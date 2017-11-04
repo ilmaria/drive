@@ -1,14 +1,14 @@
-import '../css/basscss.css'
+import './basscss.css'
 import './App.css'
 
 import { Route, BrowserRouter as Router } from 'react-router-dom'
 
-import FolderView from './FolderView'
-import GoogleApi from '../utils/googleApi'
-import Navbar from './Navbar'
-import PreviewWindow from './PreviewWindow'
+import FolderView from '../files/FolderView'
+import GoogleApi from '../../utils/googleApi'
+import Navbar from '../nav/Navbar'
+import Preview from '../preview/Preview'
 import React from 'react'
-import googleButton from '../images/google-button.svg'
+import googleButton from '../../images/google-button.svg'
 
 class App extends React.Component {
   constructor(props) {
@@ -95,10 +95,9 @@ class App extends React.Component {
             )}
           </div>
 
-          <PreviewWindow
-            className="preview-window"
-            {...this.state.selectedFile}
-          />
+          <div className="preview">
+            <Preview className="preview-window" {...this.state.selectedFile} />
+          </div>
         </main>
       </Router>
     )

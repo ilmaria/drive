@@ -2,7 +2,7 @@ import './FolderView.css'
 
 import { Link, Redirect } from 'react-router-dom'
 
-import Editor from './Editor'
+import Editor from '../editor/Editor'
 import FileItem from './FileItem'
 import PropTypes from 'prop-types'
 import React from 'react'
@@ -14,7 +14,7 @@ class FolderView extends React.Component {
 
     this.state = {
       files: JSON.parse(localStorage.getItem(key)),
-      redirect: '',
+      redirect: ''
     }
 
     this.updateFiles = this.updateFiles.bind(this)
@@ -102,7 +102,7 @@ FolderView.propTypes = {
   userId: PropTypes.string.isRequired,
   currentDir: PropTypes.string,
   getFileList: PropTypes.func,
-  onClickFile: PropTypes.func,
+  onClickFile: PropTypes.func
 }
 
 export default FolderView

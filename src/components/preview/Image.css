@@ -1,0 +1,10 @@
+.preview-image {
+  display: flex;
+  justify-content: center;
+  height: 100%;
+}
+
+.preview-image img {
+  margin: 1em;
+  object-fit: contain;
+}

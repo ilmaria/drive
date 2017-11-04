@@ -44,7 +44,7 @@ main {
   main {
     grid-template-columns: 1fr 1fr;
     grid-template-rows: 64px 1fr;
-    grid-template-areas: 'header header' 'folder-view preview-window';
+    grid-template-areas: 'header header' 'folder-view preview';
     grid-column-gap: 10px;
   }
 }

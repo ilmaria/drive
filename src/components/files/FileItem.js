@@ -2,7 +2,7 @@ import './FileItem.css'
 
 import PropTypes from 'prop-types'
 import React from 'react'
-import fileIcon from '../images/icons/file.png'
+import fileIcon from '../../images/icons/file.png'
 
 function FileItem({ name, iconLink }) {
   return (
@@ -21,7 +21,7 @@ function FileItem({ name, iconLink }) {
 
 FileItem.propTypes = {
   name: PropTypes.string.isRequired,
-  iconLink: PropTypes.string.isRequired,
+  iconLink: PropTypes.string.isRequired
 }
 
 export default FileItem

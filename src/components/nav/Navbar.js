@@ -2,8 +2,8 @@ import './Navbar.css'
 
 import PropTypes from 'prop-types'
 import React from 'react'
-import menuIcon from '../images/icons/menu.svg'
-import searchIcon from '../images/icons/search.svg'
+import menuIcon from '../../images/icons/menu.svg'
+import searchIcon from '../../images/icons/search.svg'
 
 function Navbar({ menuCallback, searchCallback }) {
   return (
