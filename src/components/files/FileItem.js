@@ -4,9 +4,11 @@ import PropTypes from 'prop-types'
 import React from 'react'
 import fileIcon from '../../images/icons/file.png'
 
-function FileItem({ name, iconLink }) {
+function FileItem({ name, iconLink, selected }) {
+  const selectedClass = selected ? 'selected-file' : ''
+
   return (
-    <div className="flex items-center file-item">
+    <div className={`file-item flex items-center ${selectedClass}`}>
       <img
         className="file-logo"
         width={30}
@@ -14,14 +16,14 @@ function FileItem({ name, iconLink }) {
         src={iconLink || fileIcon}
         alt="File logo"
       />
-      <span className="flex-auto file-item-name ellipsis">{name}</span>
+      <span className="file-item-name flex-auto ellipsis">{name}</span>
     </div>
   )
 }
 
 FileItem.propTypes = {
   name: PropTypes.string.isRequired,
-  iconLink: PropTypes.string.isRequired
+  iconLink: PropTypes.string.isRequired,
 }
 
 export default FileItem

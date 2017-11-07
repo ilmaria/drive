@@ -18,7 +18,7 @@ class App extends React.Component {
       currentDir: 'root',
       selectedFile: null,
       error: null,
-      googleApi: null
+      googleApi: null,
     }
 
     this.openMenu = this.openMenu.bind(this)
@@ -70,7 +70,7 @@ class App extends React.Component {
             menuCallback={this.openMenu}
             searchCallback={this.startSearch}
           />
-          <div className="folder-view">
+          <div className="filelist">
             {loggedIn ? (
               <Route
                 path="/:directory?"
@@ -79,6 +79,7 @@ class App extends React.Component {
                   <FolderView
                     userId={this.state.user.id}
                     currentDir={match.params.directory}
+                    selectedFile={this.state.selectedFile}
                     onClickFile={this.selectFile}
                     getFileList={
                       this.state.googleApi

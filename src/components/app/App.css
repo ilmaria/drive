@@ -34,17 +34,22 @@ body {
 
 main {
   display: grid;
-  grid-template-columns: 1fr;
-  grid-template-rows: 56px 1fr;
-  grid-template-areas: 'header' 'folder-view';
+  grid-template-columns: 1fr 1fr;
+  grid-template-rows: 64px 1fr;
+  grid-template-areas: 'header header' 'filelist preview';
+  grid-column-gap: 10px;
   height: 100vh;
 }
 
-@media (min-width: 40em) {
+.filelist {
+  grid-area: filelist;
+  overflow: auto;
+}
+
+@media (max-width: 40em) {
   main {
-    grid-template-columns: 1fr 1fr;
-    grid-template-rows: 64px 1fr;
-    grid-template-areas: 'header header' 'folder-view preview';
-    grid-column-gap: 10px;
+    grid-template-columns: 1fr;
+    grid-template-rows: 56px 1fr;
+    grid-template-areas: 'header' 'filelist';
   }
 }

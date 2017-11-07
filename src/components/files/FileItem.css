@@ -2,6 +2,14 @@
   height: 3em;
 }
 
+.file-item:hover {
+  background-color: #eee;
+}
+
+.file-item.selected-file {
+  background-color: #ddd;
+}
+
 .ellipsis {
   text-overflow: ellipsis;
   white-space: nowrap;

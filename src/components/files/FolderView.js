@@ -14,7 +14,7 @@ class FolderView extends React.Component {
 
     this.state = {
       files: JSON.parse(localStorage.getItem(key)),
-      redirect: ''
+      redirect: '',
     }
 
     this.updateFiles = this.updateFiles.bind(this)
@@ -81,28 +81,48 @@ class FolderView extends React.Component {
     }
 
     return (
-      <ul className="folder-view m0 px2">
-        {this.state.files.map(file => (
-          <div
-            onClick={this.props.onClickFile(file)}
-            onDoubleClick={this.linkTo(file)}
-            key={file.id}
-          >
-            <li>
-              <FileItem {...file} />
-            </li>
-          </div>
-        ))}
+      <ul className="m0 px2">
+        {this.state.files.sort(foldersFirst).map(file => {
+          const selectedFile = this.props.selectedFile
+          const selected = selectedFile && file.id === selectedFile.id
+
+          return (
+            <div
+              onClick={this.props.onClickFile(file)}
+              onDoubleClick={this.linkTo(file)}
+              key={file.id}
+            >
+              <li>
+                <FileItem selected={selected} {...file} />
+              </li>
+            </div>
+          )
+        })}
       </ul>
     )
   }
 }
 
+function foldersFirst(a, b) {
+  const folder = 'application/vnd.google-apps.folder'
+  const aIsFolder = a.mimeType === folder && a.mimeType !== b.mimeType
+  const bIsFolder = b.mimeType === folder && a.mimeType !== b.mimeType
+
+  if (aIsFolder) {
+    return -1
+  } else if (bIsFolder) {
+    return 1
+  }
+
+  return a.name.localeCompare(b.name)
+}
+
 FolderView.propTypes = {
   userId: PropTypes.string.isRequired,
   currentDir: PropTypes.string,
+  selectedFile: PropTypes.object,
   getFileList: PropTypes.func,
-  onClickFile: PropTypes.func
+  onClickFile: PropTypes.func,
 }
 
 export default FolderView
