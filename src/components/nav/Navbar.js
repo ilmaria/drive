@@ -5,7 +5,7 @@ import React from 'react'
 import menuIcon from '../../images/icons/menu.svg'
 import searchIcon from '../../images/icons/search.svg'
 
-function Navbar({ menuCallback, searchCallback }) {
+const Navbar = ({ menuCallback, searchCallback }) => {
   return (
     <nav className="flex items-center justify-between">
       <button className="no-btn mx2" onClick={menuCallback}>
@@ -21,7 +21,7 @@ function Navbar({ menuCallback, searchCallback }) {
 
 Navbar.propTypes = {
   menuCallback: PropTypes.func.isRequired,
-  searchCallback: PropTypes.func.isRequired
+  searchCallback: PropTypes.func.isRequired,
 }
 
 export default Navbar

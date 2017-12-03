@@ -1,12 +1,12 @@
 import PropTypes from 'prop-types'
 import React from 'react'
 
-function Pdf({ uri }) {
+const Pdf = ({ uri }) => {
   return <div>PDF {uri}</div>
 }
 
 Pdf.propTypes = {
-  uri: PropTypes.string
+  uri: PropTypes.string,
 }
 
 export default Pdf

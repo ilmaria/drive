@@ -1,108 +1,75 @@
 import './basscss.css'
 import './App.css'
 
-import { Route, BrowserRouter as Router } from 'react-router-dom'
-
 import FolderView from '../files/FolderView'
-import GoogleApi from '../../utils/googleApi'
+import LocalCache from '../containers/LocalCache'
 import Navbar from '../nav/Navbar'
 import Preview from '../preview/Preview'
+import PropTypes from 'prop-types'
 import React from 'react'
+import { Route } from 'react-router-dom'
 import googleButton from '../../images/google-button.svg'
 
-class App extends React.Component {
-  constructor(props) {
-    super(props)
-    this.state = {
-      user: JSON.parse(localStorage.getItem('currentUser')),
-      currentDir: 'root',
-      selectedFile: null,
-      error: null,
-      googleApi: null,
-    }
+const App = ({
+  user,
+  currentFile,
+  selectFile,
+  getFilesInFolder,
+  getRecentFiles,
+  login,
+  openMenu,
+  startSearch,
+}) => (
+  <main>
+    <Navbar
+      className="header"
+      menuCallback={openMenu}
+      searchCallback={startSearch}
+    />
+    <div className="filelist">
+      {user ? (
+        <Route
+          path="/:directory?"
+          strict
+          render={({ match }) => {
+            const dir = match.params.directory || 'root'
 
-    this.openMenu = this.openMenu.bind(this)
-    this.startSearch = this.startSearch.bind(this)
-    this.selectFile = this.selectFile.bind(this)
-    this.login = this.login.bind(this)
-  }
-
-  componentDidMount() {
-    new GoogleApi()
-      .init(user => {
-        this.setState({ user })
-        localStorage.setItem('currentUser', JSON.stringify(user))
-      })
-      .then(googleApi => {
-        this.setState({ googleApi })
-      })
-      .catch(err => {
-        console.error(err)
-        this.error = err
-      })
-  }
-
-  openMenu() {}
-
-  startSearch() {}
-
-  selectFile(file) {
-    return () => {
-      console.log('select', file)
-      this.setState({ selectedFile: file })
-    }
-  }
-
-  async login() {
-    if (this.state.googleApi) {
-      this.state.googleApi.login()
-    }
-  }
-
-  render() {
-    const loggedIn = this.state.user
-
-    return (
-      <Router>
-        <main>
-          <Navbar
-            className="header"
-            menuCallback={this.openMenu}
-            searchCallback={this.startSearch}
-          />
-          <div className="filelist">
-            {loggedIn ? (
-              <Route
-                path="/:directory?"
-                strict
-                render={({ match }) => (
+            return (
+              <LocalCache
+                cacheKey={user.id + dir}
+                getFiles={() => getFilesInFolder(dir)}
+              >
+                {files => (
                   <FolderView
-                    userId={this.state.user.id}
-                    currentDir={match.params.directory}
-                    selectedFile={this.state.selectedFile}
-                    onClickFile={this.selectFile}
-                    getFileList={
-                      this.state.googleApi
-                        ? this.state.googleApi.getFilesInFolder
-                        : null
-                    }
+                    currentFile={currentFile}
+                    onClickFile={selectFile}
+                    files={files}
                   />
                 )}
-              />
-            ) : (
-              <button className="google-sign-in" onClick={this.login}>
-                <img src={googleButton} alt="Sign in with Google" />
-              </button>
-            )}
-          </div>
+              </LocalCache>
+            )
+          }}
+        />
+      ) : (
+        <button className="google-sign-in" onClick={login}>
+          <img src={googleButton} alt="Sign in with Google" />
+        </button>
+      )}
+    </div>
 
-          <div className="preview">
-            <Preview className="preview-window" {...this.state.selectedFile} />
-          </div>
-        </main>
-      </Router>
-    )
-  }
+    <div className="preview">
+      <Preview className="preview-window" {...currentFile} />
+    </div>
+  </main>
+)
+
+App.propTypes = {
+  user: PropTypes.object,
+  currentFile: PropTypes.object,
+  selectFile: PropTypes.func,
+  getFilesInFolder: PropTypes.func,
+  getRecentFiles: PropTypes.func,
+  login: PropTypes.func,
 }
 
 export default App

@@ -4,7 +4,7 @@ import PropTypes from 'prop-types'
 import React from 'react'
 import fileIcon from '../../images/icons/file.png'
 
-function FileItem({ name, iconLink, selected }) {
+const FileItem = ({ name, iconLink, selected }) => {
   const selectedClass = selected ? 'selected-file' : ''
 
   return (

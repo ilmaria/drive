@@ -6,7 +6,7 @@ import Pdf from './Pdf'
 import PropTypes from 'prop-types'
 import React from 'react'
 
-function Preview({ name, mimeType, webContentLink }) {
+const Preview = ({ name, mimeType, webContentLink }) => {
   const url = webContentLink
     ? webContentLink.replace('export=download', 'export=view')
     : ''
@@ -26,7 +26,7 @@ function Preview({ name, mimeType, webContentLink }) {
 Preview.propTypes = {
   name: PropTypes.string,
   mimeType: PropTypes.string,
-  webContentLink: PropTypes.string
+  webContentLink: PropTypes.string,
 }
 
 export default Preview
