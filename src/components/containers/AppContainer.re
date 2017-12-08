@@ -1,9 +1,26 @@
-/* import App from '../app/App'
-import GoogleData from './GoogleData'
-import React from 'react'
-import { BrowserRouter as Router } from 'react-router-dom' */
+module GoogleData = {
+  [@bs.module]
+  external googleData : ReasonReact.reactClass = "GoogleData";
 
-type file = string;
+  let make = (children) =>
+    ReasonReact.wrapJsForReason(
+      ~reactClass=googleData,
+      children
+    );
+};
+
+module App = {
+  [@bs.module]
+  external app : ReasonReact.reactClass = "App";
+
+  let make = (children) =>
+    ReasonReact.wrapJsForReason(
+      ~reactClass=app,
+      children
+    );
+};
+
+type file = option(string);
 
 type action =
   | SelectFile(file)
@@ -11,8 +28,8 @@ type action =
   | StartSearch;
 
 type state = {
-  currentFile: null,
-  error: null
+  currentFile: file,
+  error: option(string)
 };
 
 let component = ReasonReact.reducerComponent("AppContainer");
@@ -21,8 +38,8 @@ let make = (_children) => {
   ...component,
 
   initialState: () => {
-    currentFile: null,
-    error: null,
+    currentFile: None,
+    error: None,
   },
 
   reducer: (action, state) =>
