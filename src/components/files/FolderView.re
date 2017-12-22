@@ -1,6 +1,6 @@
 [%bs.raw {| require('./FolderView.css') |}];
 
-type file = {
+type file_t = {
   id: string,
   name: string,
   selected: bool,
@@ -10,10 +10,15 @@ type file = {
 
 let component = ReasonReact.statelessComponent("FolderView");
 
-let file_to_list_item = (current_file, on_click_file, file) => {
+let file_to_list_item =
+    (
+      current_file: option(file_t),
+      on_click_file: (file_t, _) => unit,
+      file: file_t
+    ) => {
   let selected =
     switch current_file {
-    | Some(current_file) => file.id == current_file.id
+    | Some(current) => current.id == file.id
     | None => false
     };
   <div onClick=(on_click_file(file)) key=file.id>
@@ -23,11 +28,11 @@ let file_to_list_item = (current_file, on_click_file, file) => {
 
 let foldersFirst = (a, b) => {
   let folder = "application/vnd.google-apps.folder";
-  let aIsFolder = a.mimeType === folder && a.mimeType !== b.mimeType;
-  let bIsFolder = b.mimeType === folder && a.mimeType !== b.mimeType;
-  if (aIsFolder) {
+  let a_is_folder = a.mimeType === folder && a.mimeType !== b.mimeType;
+  let b_is_folder = b.mimeType === folder && a.mimeType !== b.mimeType;
+  if (a_is_folder) {
     (-1);
-  } else if (bIsFolder) {
+  } else if (b_is_folder) {
     1;
   } else {
     let cmp = Js.String.localeCompare(a.name, b.name);
@@ -35,7 +40,13 @@ let foldersFirst = (a, b) => {
   };
 };
 
-let make = (~files, ~current_file=?, ~on_click_file, _children) => {
+let make =
+    (
+      ~files: option(list(file_t)),
+      ~current_file: option(file_t)=?,
+      ~on_click_file: (file_t, _) => unit,
+      _children
+    ) => {
   ...component,
   render: _self =>
     switch files {
