@@ -1,7 +1,7 @@
 import './basscss.css'
 import './App.css'
 
-import FolderView from '../files/FolderView'
+import FolderView from '../files/FolderView.bs'
 import LocalCache from '../containers/LocalCache'
 import Navbar from '../nav/Navbar'
 import Preview from '../preview/Preview'
@@ -20,48 +20,48 @@ const App = ({
   openMenu,
   startSearch,
 }) => (
-  <main>
-    <Navbar
-      className="header"
-      menuCallback={openMenu}
-      searchCallback={startSearch}
-    />
-    <div className="filelist">
-      {user ? (
-        <Route
-          path="/:directory?"
-          strict
-          render={({ match }) => {
-            const dir = match.params.directory || 'root'
+    <main>
+      <Navbar
+        className="header"
+        menuCallback={openMenu}
+        searchCallback={startSearch}
+      />
+      <div className="filelist">
+        {user ? (
+          <Route
+            path="/:directory?"
+            strict
+            render={({ match }) => {
+              const dir = match.params.directory || 'root'
 
-            return (
-              <LocalCache
-                cacheKey={user.id + dir}
-                getFiles={() => getFilesInFolder(dir)}
-              >
-                {files => (
-                  <FolderView
-                    currentFile={currentFile}
-                    onClickFile={selectFile}
-                    files={files}
-                  />
-                )}
-              </LocalCache>
-            )
-          }}
-        />
-      ) : (
-        <button className="google-sign-in" onClick={login}>
-          <img src={googleButton} alt="Sign in with Google" />
-        </button>
-      )}
-    </div>
+              return (
+                <LocalCache
+                  cacheKey={user.id + dir}
+                  getFiles={() => getFilesInFolder(dir)}
+                >
+                  {files => (
+                    <FolderView
+                      currentFile={currentFile}
+                      onClickFile={selectFile}
+                      files={files}
+                    />
+                  )}
+                </LocalCache>
+              )
+            }}
+          />
+        ) : (
+            <button className="google-sign-in" onClick={login}>
+              <img src={googleButton} alt="Sign in with Google" />
+            </button>
+          )}
+      </div>
 
-    <div className="preview">
-      <Preview className="preview-window" {...currentFile} />
-    </div>
-  </main>
-)
+      <div className="preview">
+        <Preview className="preview-window" {...currentFile} />
+      </div>
+    </main>
+  )
 
 App.propTypes = {
   user: PropTypes.object,
