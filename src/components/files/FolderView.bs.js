@@ -11,45 +11,45 @@ import * as FileItem$EasyDrive from "./FileItem.bs.js";
 
 (( require('./FolderView.css') ));
 
-function foldersFirst(a, b) {
-  var folder = "application/vnd.google-apps.folder";
-  var aIsFolder = +(a[/* mimeType */4] === folder && a[/* mimeType */4] !== b[/* mimeType */4]);
-  var bIsFolder = +(b[/* mimeType */4] === folder && a[/* mimeType */4] !== b[/* mimeType */4]);
-  if (aIsFolder) {
-    return -1;
-  } else if (bIsFolder) {
-    return 1;
-  } else {
-    var cmp = b[/* name */1].localeCompare(a[/* name */1]);
-    var match = +(cmp > 0.0);
-    if (match !== 0) {
-      return 1;
-    } else {
-      var match$1 = +(cmp < 0.0);
-      if (match$1 !== 0) {
-        return -1;
-      } else {
-        return 0;
-      }
-    }
-  }
-}
-
 var component = ReasonReact.statelessComponent("FolderView");
 
 function make(files, current_file, on_click_file, _) {
+  var file_to_list_item = function (file) {
+    var selected = current_file ? +(current_file[0][/* id */0] === file[/* id */0]) : /* false */0;
+    return React.createElement("div", {
+                key: file[/* id */0],
+                onClick: Curry._1(on_click_file, file)
+              }, React.createElement("li", undefined, ReasonReact.element(/* None */0, /* None */0, FileItem$EasyDrive.make(file[/* name */1], selected, file[/* icon_link */3], /* array */[]))));
+  };
+  var foldersFirst = function (a, b) {
+    var folder = "application/vnd.google-apps.folder";
+    var a_is_folder = +(a[/* mimeType */4] === folder && a[/* mimeType */4] !== b[/* mimeType */4]);
+    var b_is_folder = +(b[/* mimeType */4] === folder && a[/* mimeType */4] !== b[/* mimeType */4]);
+    if (a_is_folder) {
+      return -1;
+    } else if (b_is_folder) {
+      return 1;
+    } else {
+      var cmp = b[/* name */1].localeCompare(a[/* name */1]);
+      var match = +(cmp > 0.0);
+      if (match !== 0) {
+        return 1;
+      } else {
+        var match$1 = +(cmp < 0.0);
+        if (match$1 !== 0) {
+          return -1;
+        } else {
+          return 0;
+        }
+      }
+    }
+  };
   var newrecord = component.slice();
   newrecord[/* render */9] = (function () {
       if (files) {
         return React.createElement("ul", {
                     className: "m0 px2"
-                  }, $$Array.of_list(List.map((function (file) {
-                              var selected = current_file ? +(file[/* id */0] === current_file[0][/* id */0]) : /* false */0;
-                              return React.createElement("div", {
-                                          key: file[/* id */0],
-                                          onClick: Curry._1(on_click_file, file)
-                                        }, React.createElement("li", undefined, ReasonReact.element(/* None */0, /* None */0, FileItem$EasyDrive.make(file[/* name */1], selected, file[/* icon_link */3], /* array */[]))));
-                            }), List.sort(foldersFirst, files[0]))));
+                  }, $$Array.of_list(List.map(file_to_list_item, List.sort(foldersFirst, files[0]))));
       } else {
         return React.createElement("p", undefined, "Loading files...");
       }
@@ -62,11 +62,10 @@ var $$default = ReasonReact.wrapReasonForJs(component, (function (jsProps) {
       }));
 
 export {
-  foldersFirst ,
-  component    ,
-  make         ,
-  $$default    ,
-  $$default      as default,
+  component ,
+  make      ,
+  $$default ,
+  $$default   as default,
   
 }
 /*  Not a pure module */
