@@ -4,8 +4,10 @@
 import * as $$Array            from "bs-platform/lib/es6/array.js";
 import * as Curry              from "bs-platform/lib/es6/curry.js";
 import * as React              from "react";
+import * as $$String           from "bs-platform/lib/es6/string.js";
 import * as ReasonReact        from "reason-react/src/ReasonReact.js";
 import * as Js_primitive       from "bs-platform/lib/es6/js_primitive.js";
+import * as Utils$EasyDrive    from "../../Utils.bs.js";
 import * as FileItem$EasyDrive from "./FileItem.bs.js";
 
 (( require('./FolderView.css') ));
@@ -41,26 +43,13 @@ function make(js_files, current_file, on_click_file, _) {
               }, React.createElement("li", undefined, ReasonReact.element(/* None */0, /* None */0, FileItem$EasyDrive.make(file[/* name */1], selected, file[/* icon_link */3], /* array */[]))));
   };
   var foldersFirst = function (a, b) {
-    var folder = "application/vnd.google-apps.folder";
-    var a_is_folder = +(a[/* mimeType */4] === folder && a[/* mimeType */4] !== b[/* mimeType */4]);
-    var b_is_folder = +(b[/* mimeType */4] === folder && a[/* mimeType */4] !== b[/* mimeType */4]);
-    if (a_is_folder) {
+    var a_is_folder = +(a[/* mimeType */4] === "application/vnd.google-apps.folder");
+    if (a[/* mimeType */4] === b[/* mimeType */4]) {
+      return $$String.compare(a[/* name */1], b[/* name */1]);
+    } else if (a_is_folder) {
       return -1;
-    } else if (b_is_folder) {
-      return 1;
     } else {
-      var cmp = b[/* name */1].localeCompare(a[/* name */1]);
-      var match = +(cmp > 0.0);
-      if (match !== 0) {
-        return 1;
-      } else {
-        var match$1 = +(cmp < 0.0);
-        if (match$1 !== 0) {
-          return -1;
-        } else {
-          return 0;
-        }
-      }
+      return 1;
     }
   };
   var newrecord = component.slice();
@@ -69,9 +58,9 @@ function make(js_files, current_file, on_click_file, _) {
         var files = $$Array.map(fileFromJs, js_files[0]);
         return React.createElement("ul", {
                     className: "m0 px2"
-                  }, ($$Array.sort(foldersFirst, files), $$Array.map(file_to_list_item, files)));
+                  }, ($$Array.sort(foldersFirst, files), Utils$EasyDrive.arrayElem($$Array.map(file_to_list_item, files))));
       } else {
-        return React.createElement("p", undefined, "Loading files...");
+        return React.createElement("p", undefined, Utils$EasyDrive.stringElem("Loading files..."));
       }
     });
   return newrecord;

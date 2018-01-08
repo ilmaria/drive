@@ -1,3 +1,5 @@
+open Utils;
+
 [%bs.raw {| require('./FolderView.css') |}];
 
 [@bs.deriving {jsConverter: newType}]
@@ -30,15 +32,13 @@ let make =
   };
   let foldersFirst = (a, b) => {
     let folder = "application/vnd.google-apps.folder";
-    let a_is_folder = a.mimeType === folder && a.mimeType !== b.mimeType;
-    let b_is_folder = b.mimeType === folder && a.mimeType !== b.mimeType;
-    if (a_is_folder) {
+    let a_is_folder = a.mimeType === folder;
+    if (a.mimeType === b.mimeType) {
+      String.compare(a.name, b.name)
+    } else if (a_is_folder) {
       (-1)
-    } else if (b_is_folder) {
-      1
     } else {
-      let cmp = Js.String.localeCompare(a.name, b.name);
-      cmp > 0.0 ? 1 : cmp < 0.0 ? (-1) : 0
+      1
     }
   };
   {
@@ -50,10 +50,10 @@ let make =
           {
             let files = Array.map(fileFromJs, file_list);
             Array.sort(foldersFirst, files);
-            files |> Array.map(file_to_list_item) |> ReasonReact.arrayToElement
+            files |> Array.map(file_to_list_item) |> arrayElem
           }
         </ul>
-      | None => <p> (ReasonReact.stringToElement("Loading files...")) </p>
+      | None => <p> (stringElem("Loading files...")) </p>
       }
   }
 };
