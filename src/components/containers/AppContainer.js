@@ -1,7 +1,8 @@
+import { Route, BrowserRouter as Router } from 'react-router-dom'
+
 import App from '../app/App'
 import GoogleData from './GoogleData'
 import React from 'react'
-import { BrowserRouter as Router } from 'react-router-dom'
 
 class AppContainer extends React.Component {
   constructor(props) {
@@ -20,7 +21,7 @@ class AppContainer extends React.Component {
 
   startSearch() {}
 
-  selectFile(file) {
+  selectFile(file, history) {
     return () => {
       this.setState({ currentFile: file })
     }
@@ -30,20 +31,18 @@ class AppContainer extends React.Component {
     return (
       <Router>
         <GoogleData>
-          {(user, login, getFilesInFolder, getRecentFiles) => {
-            return (
-              <App
-                user={user}
-                login={login}
-                getFilesInFolder={getFilesInFolder}
-                getRecentFiles={getRecentFiles}
-                currentFile={this.state.currentFile}
-                selectFile={this.selectFile}
-                openMenu={this.openMenu}
-                startSearch={this.startSearch}
-              />
-            )
-          }}
+          {(user, login, getFilesInFolder, getRecentFiles) => (
+            <App
+              user={user}
+              login={login}
+              getFilesInFolder={getFilesInFolder}
+              getRecentFiles={getRecentFiles}
+              currentFile={this.state.currentFile}
+              onClickFile={this.selectFile}
+              openMenu={this.openMenu}
+              startSearch={this.startSearch}
+            />
+          )}
         </GoogleData>
       </Router>
     )

@@ -13,7 +13,7 @@ import googleButton from '../../images/google-button.svg'
 const App = ({
   user,
   currentFile,
-  selectFile,
+  onClickFile,
   getFilesInFolder,
   getRecentFiles,
   login,
@@ -33,6 +33,7 @@ const App = ({
           strict
           render={({ match }) => {
             const dir = match.params.directory || 'root'
+            console.log('user', user)
 
             return (
               <LocalCache
@@ -42,7 +43,7 @@ const App = ({
                 {files => (
                   <FolderView
                     currentFile={currentFile}
-                    onClickFile={selectFile}
+                    onClickFile={onClickFile}
                     files={files}
                   />
                 )}
@@ -66,7 +67,7 @@ const App = ({
 App.propTypes = {
   user: PropTypes.object,
   currentFile: PropTypes.object,
-  selectFile: PropTypes.func,
+  onClickFile: PropTypes.func,
   getFilesInFolder: PropTypes.func,
   getRecentFiles: PropTypes.func,
   login: PropTypes.func,

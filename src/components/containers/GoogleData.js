@@ -65,7 +65,7 @@ export default class GoogleData extends React.Component {
             email: profile.getEmail(),
           }
         : null
-      this.setUser({ user })
+      this.setUser(user)
     }
 
     // Initial call to this handleUserChange

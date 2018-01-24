@@ -1,6 +1,7 @@
 import './FolderView.css'
 
 import FileItem from './FileItem'
+import { Link } from 'react-router-dom'
 import PropTypes from 'prop-types'
 import React from 'react'
 
@@ -11,19 +12,37 @@ const FolderView = ({ files, currentFile, onClickFile }) => {
     return <p>Loading files...</p>
   }
 
+  const Folder = ({ file }) => (
+    <Link to={'/' + file.id}>
+      <li>
+        <FileItem {...file} />
+      </li>
+    </Link>
+  )
+
+  const File = ({ file }) => {
+    const selected = currentFile && file.id === currentFile.id
+    return (
+      <div onClick={onClickFile(file)}>
+        <li>
+          <FileItem selected={selected} {...file} />
+        </li>
+      </div>
+    )
+  }
+
   return (
     <ul className="m0 px2">
-      {files.sort(foldersFirst).map(file => {
-        const selected = currentFile && file.id === currentFile.id
-
-        return (
-          <div onClick={onClickFile(file)} key={file.id}>
-            <li>
-              <FileItem selected={selected} {...file} />
-            </li>
-          </div>
-        )
-      })}
+      {files
+        .sort(foldersFirst)
+        .map(
+          file =>
+            file.mimeType === 'application/vnd.google-apps.folder' ? (
+              <Folder file={file} key={file.id} />
+            ) : (
+              <File file={file} key={file.id} />
+            )
+        )}
     </ul>
   )
 }

@@ -24,6 +24,7 @@ const FileItem = ({ name, iconLink, selected }) => {
 FileItem.propTypes = {
   name: PropTypes.string.isRequired,
   iconLink: PropTypes.string.isRequired,
+  selected: PropTypes.bool,
 }
 
 export default FileItem
