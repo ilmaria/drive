@@ -1,9 +1,9 @@
-import App from '../app/App'
-import GoogleData from './GoogleData'
+import App from './app/App'
+import GoogleData from './containers/GoogleData'
 import React from 'react'
 import { BrowserRouter as Router } from 'react-router-dom'
 
-class AppContainer extends React.Component {
+class EasyDrive extends React.Component {
   constructor(props) {
     super(props)
     this.state = {
@@ -31,6 +31,7 @@ class AppContainer extends React.Component {
       <Router>
         <GoogleData>
           {(user, login, getFilesInFolder, getRecentFiles) => {
+            console.log(this.state.currentFile)
             return (
               <App
                 user={user}
@@ -50,4 +51,4 @@ class AppContainer extends React.Component {
   }
 }
 
-export default AppContainer
+export default EasyDrive

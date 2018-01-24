@@ -7,30 +7,11 @@ import * as React              from "react";
 import * as $$String           from "bs-platform/lib/es6/string.js";
 import * as ReasonReact        from "reason-react/src/ReasonReact.js";
 import * as Js_primitive       from "bs-platform/lib/es6/js_primitive.js";
+import * as Types$EasyDrive    from "../Types.bs.js";
 import * as Utils$EasyDrive    from "../../Utils.bs.js";
 import * as FileItem$EasyDrive from "./FileItem.bs.js";
 
 (( require('./FolderView.css') ));
-
-function fileToJs(param) {
-  return {
-          id: param[/* id */0],
-          name: param[/* name */1],
-          selected: param[/* selected */2],
-          icon_link: param[/* icon_link */3],
-          mimeType: param[/* mimeType */4]
-        };
-}
-
-function fileFromJs(param) {
-  return /* record */[
-          /* id */param.id,
-          /* name */param.name,
-          /* selected */param.selected,
-          /* icon_link */param.icon_link,
-          /* mimeType */param.mimeType
-        ];
-}
 
 var component = ReasonReact.statelessComponent("FolderView");
 
@@ -39,12 +20,12 @@ function make(js_files, current_file, on_click_file, _) {
     var selected = current_file ? +(current_file[0][/* id */0] === file[/* id */0]) : /* false */0;
     return React.createElement("div", {
                 key: file[/* id */0],
-                onClick: Curry._1(on_click_file, file)
-              }, React.createElement("li", undefined, ReasonReact.element(/* None */0, /* None */0, FileItem$EasyDrive.make(file[/* name */1], selected, file[/* icon_link */3], /* array */[]))));
+                onClick: Curry._1(on_click_file, Types$EasyDrive.fileToJs(file))
+              }, React.createElement("li", undefined, ReasonReact.element(/* None */0, /* None */0, FileItem$EasyDrive.make(file[/* name */1], selected, file[/* iconLink */4], /* array */[]))));
   };
   var foldersFirst = function (a, b) {
-    var a_is_folder = +(a[/* mimeType */4] === "application/vnd.google-apps.folder");
-    if (a[/* mimeType */4] === b[/* mimeType */4]) {
+    var a_is_folder = +(a[/* mimeType */5] === "application/vnd.google-apps.folder");
+    if (a[/* mimeType */5] === b[/* mimeType */5]) {
       return $$String.compare(a[/* name */1], b[/* name */1]);
     } else if (a_is_folder) {
       return -1;
@@ -55,7 +36,7 @@ function make(js_files, current_file, on_click_file, _) {
   var newrecord = component.slice();
   newrecord[/* render */9] = (function () {
       if (js_files) {
-        var files = $$Array.map(fileFromJs, js_files[0]);
+        var files = $$Array.map(Types$EasyDrive.fileFromJs, js_files[0]);
         return React.createElement("ul", {
                     className: "m0 px2"
                   }, ($$Array.sort(foldersFirst, files), Utils$EasyDrive.arrayElem($$Array.map(file_to_list_item, files))));
@@ -71,12 +52,10 @@ var $$default = ReasonReact.wrapReasonForJs(component, (function (jsProps) {
       }));
 
 export {
-  fileToJs   ,
-  fileFromJs ,
-  component  ,
-  make       ,
-  $$default  ,
-  $$default    as default,
+  component ,
+  make      ,
+  $$default ,
+  $$default   as default,
   
 }
 /*  Not a pure module */
