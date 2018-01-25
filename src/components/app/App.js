@@ -39,16 +39,17 @@ const App = ({
                 cacheKey={user.id + dir}
                 getFiles={() => getFilesInFolder(dir)}
               >
-                {files => (
-                  console.log(files),
-                  (
+                {files =>
+                  files ? (
                     <FolderView
                       currentFile={currentFile}
                       onClickFile={selectFile}
                       files={files}
                     />
+                  ) : (
+                    'Loading files...'
                   )
-                )}
+                }
               </LocalCache>
             )
           }}
@@ -61,7 +62,7 @@ const App = ({
     </div>
 
     <div className="preview">
-      <Preview className="preview-window" {...currentFile} />
+      {currentFile && <Preview className="preview-window" file={currentFile} />}
     </div>
   </main>
 )

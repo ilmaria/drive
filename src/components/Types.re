@@ -4,6 +4,7 @@ type file = {
   name: string,
   modifiedTime: Js.Date.t,
   webViewLink: string,
-  iconLink: option(string),
+  webContentLink: Js.nullable(string),
+  iconLink: string,
   mimeType: string
 };

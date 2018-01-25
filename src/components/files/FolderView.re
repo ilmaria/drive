@@ -6,7 +6,7 @@ let component = ReasonReact.statelessComponent("FolderView");
 
 let make =
     (
-      ~js_files: option(array(Types.abs_file))=?,
+      ~files: array(Types.file),
       ~current_file: option(Types.file)=?,
       ~on_click_file: (Types.abs_file, _) => unit,
       _children
@@ -18,7 +18,7 @@ let make =
       | None => false
       };
     <div onClick=(on_click_file(Types.fileToJs(file))) key=file.id>
-      <li> <FileItem selected name=file.name icon_link=?file.iconLink /> </li>
+      <li> <FileItem selected name=file.name icon_link=file.iconLink /> </li>
     </div>
   };
   let foldersFirst = (a: Types.file, b: Types.file) => {
@@ -35,17 +35,12 @@ let make =
   {
     ...component,
     render: (_self) =>
-      switch js_files {
-      | Some(file_list) =>
-        <ul className="m0 px2">
-          {
-            let files = Array.map(Types.fileFromJs, file_list);
-            Array.sort(foldersFirst, files);
-            files |> Array.map(file_to_list_item) |> arrayElem
-          }
-        </ul>
-      | None => <p> (stringElem("Loading files...")) </p>
-      }
+      <ul className="m0 px2">
+        {
+          Array.sort(foldersFirst, files);
+          files |> Array.map(file_to_list_item) |> arrayElem
+        }
+      </ul>
   }
 };
 
@@ -54,7 +49,7 @@ let default =
     ~component,
     (jsProps) =>
       make(
-        ~js_files=?Js.Nullable.to_opt(jsProps##files),
+        ~files=Array.map(Types.fileFromJs, jsProps##files),
         ~current_file=?Js.Nullable.to_opt(jsProps##currentFile),
         ~on_click_file=jsProps##onClickFile,
         [||]

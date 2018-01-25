@@ -6,7 +6,7 @@ let file_icon = [%bs.raw {| require('../../images/icons/file.png') |}];
 
 let component = ReasonReact.statelessComponent("FileItem");
 
-let make = (~name, ~selected, ~icon_link=file_icon, _children) => {
+let make = (~name, ~selected, ~icon_link, _children) => {
   ...component,
   render: (_self) => {
     let selectedClass = selected ? "selected-file" : "";

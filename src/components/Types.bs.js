@@ -8,8 +8,9 @@ function fileToJs(param) {
           name: param[/* name */1],
           modifiedTime: param[/* modifiedTime */2],
           webViewLink: param[/* webViewLink */3],
-          iconLink: param[/* iconLink */4],
-          mimeType: param[/* mimeType */5]
+          webContentLink: param[/* webContentLink */4],
+          iconLink: param[/* iconLink */5],
+          mimeType: param[/* mimeType */6]
         };
 }
 
@@ -19,6 +20,7 @@ function fileFromJs(param) {
           /* name */param.name,
           /* modifiedTime */param.modifiedTime,
           /* webViewLink */param.webViewLink,
+          /* webContentLink */param.webContentLink,
           /* iconLink */param.iconLink,
           /* mimeType */param.mimeType
         ];

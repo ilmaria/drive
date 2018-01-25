@@ -4,6 +4,7 @@
 import * as ReasonReact        from "reason-react/src/ReasonReact.js";
 import * as Pdf$EasyDrive      from "./Pdf.bs.js";
 import * as Image$EasyDrive    from "./Image.bs.js";
+import * as Types$EasyDrive    from "../Types.bs.js";
 import * as Utils$EasyDrive    from "../../Utils.bs.js";
 import * as Markdown$EasyDrive from "./Markdown.bs.js";
 
@@ -11,15 +12,17 @@ import * as Markdown$EasyDrive from "./Markdown.bs.js";
 
 var component = ReasonReact.statelessComponent("Preview");
 
-function make(name, mimeType, webContentLink, _) {
+function make(file, _) {
   var newrecord = component.slice();
   newrecord[/* render */9] = (function () {
-      var url = webContentLink ? "export=view".replace(webContentLink[0], "export=download") : "";
-      switch (mimeType) {
+      var webContentLink = file[/* webContentLink */4];
+      var url = (webContentLink == null) ? "" : webContentLink.replace("export=download", "export=view");
+      var match = file[/* mimeType */6];
+      switch (match) {
         case "application/pdf" : 
             return ReasonReact.element(/* None */0, /* None */0, Pdf$EasyDrive.make(url, /* array */[]));
         case "image/jpeg" : 
-            return ReasonReact.element(/* None */0, /* None */0, Image$EasyDrive.make(url, name, /* array */[]));
+            return ReasonReact.element(/* None */0, /* None */0, Image$EasyDrive.make(url, file[/* name */1], /* array */[]));
         case "text/x-markdown" : 
             return ReasonReact.element(/* None */0, /* None */0, Markdown$EasyDrive.make("Markdown content placeholder", /* array */[]));
         default:
@@ -30,7 +33,7 @@ function make(name, mimeType, webContentLink, _) {
 }
 
 var $$default = ReasonReact.wrapReasonForJs(component, (function (jsProps) {
-        return make(jsProps.name, jsProps.mimeType, jsProps.webContentLink, /* array */[]);
+        return make(Types$EasyDrive.fileFromJs(jsProps.file), /* array */[]);
       }));
 
 export {

@@ -4,16 +4,17 @@ open Utils;
 
 let component = ReasonReact.statelessComponent("Preview");
 
-let make = (~name, ~mimeType, ~webContentLink, _children) => {
+let make = (~file: Types.file, _children) => {
   ...component,
   render: (_self) => {
+    let webContentLink = Js.Nullable.to_opt(file.webContentLink);
     let url =
       switch webContentLink {
-      | Some(link) => Js.String.replace(link, "export=download", "export=view")
+      | Some(link) => Js.String.replace("export=download", "export=view", link)
       | None => ""
       };
-    switch mimeType {
-    | "image/jpeg" => <Image src=url alt=name />
+    switch file.mimeType {
+    | "image/jpeg" => <Image src=url alt=file.name />
     | "application/pdf" => <Pdf uri=url />
     | "text/x-markdown" => <Markdown content="Markdown content placeholder" />
     | _ => stringElem("Preview")
@@ -24,11 +25,5 @@ let make = (~name, ~mimeType, ~webContentLink, _children) => {
 let default =
   ReasonReact.wrapReasonForJs(
     ~component,
-    (jsProps) =>
-      make(
-        ~name=jsProps##name,
-        ~mimeType=jsProps##mimeType,
-        ~webContentLink=jsProps##webContentLink,
-        [||]
-      )
+    (jsProps) => make(~file=Types.fileFromJs(jsProps##file), [||])
   );

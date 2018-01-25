@@ -31,7 +31,6 @@ class EasyDrive extends React.Component {
       <Router>
         <GoogleData>
           {(user, login, getFilesInFolder, getRecentFiles) => {
-            console.log(this.state.currentFile)
             return (
               <App
                 user={user}

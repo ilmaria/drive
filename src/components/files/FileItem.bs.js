@@ -11,8 +11,7 @@ var file_icon = ( require('../../images/icons/file.png') );
 
 var component = ReasonReact.statelessComponent("FileItem");
 
-function make(name, selected, $staropt$star, _) {
-  var icon_link = $staropt$star ? $staropt$star[0] : file_icon;
+function make(name, selected, icon_link, _) {
   var newrecord = component.slice();
   newrecord[/* render */9] = (function () {
       var selectedClass = selected !== 0 ? "selected-file" : "";

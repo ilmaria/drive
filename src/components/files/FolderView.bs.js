@@ -15,17 +15,17 @@ import * as FileItem$EasyDrive from "./FileItem.bs.js";
 
 var component = ReasonReact.statelessComponent("FolderView");
 
-function make(js_files, current_file, on_click_file, _) {
+function make(files, current_file, on_click_file, _) {
   var file_to_list_item = function (file) {
     var selected = current_file ? +(current_file[0][/* id */0] === file[/* id */0]) : /* false */0;
     return React.createElement("div", {
                 key: file[/* id */0],
                 onClick: Curry._1(on_click_file, Types$EasyDrive.fileToJs(file))
-              }, React.createElement("li", undefined, ReasonReact.element(/* None */0, /* None */0, FileItem$EasyDrive.make(file[/* name */1], selected, file[/* iconLink */4], /* array */[]))));
+              }, React.createElement("li", undefined, ReasonReact.element(/* None */0, /* None */0, FileItem$EasyDrive.make(file[/* name */1], selected, file[/* iconLink */5], /* array */[]))));
   };
   var foldersFirst = function (a, b) {
-    var a_is_folder = +(a[/* mimeType */5] === "application/vnd.google-apps.folder");
-    if (a[/* mimeType */5] === b[/* mimeType */5]) {
+    var a_is_folder = +(a[/* mimeType */6] === "application/vnd.google-apps.folder");
+    if (a[/* mimeType */6] === b[/* mimeType */6]) {
       return $$String.compare(a[/* name */1], b[/* name */1]);
     } else if (a_is_folder) {
       return -1;
@@ -35,20 +35,15 @@ function make(js_files, current_file, on_click_file, _) {
   };
   var newrecord = component.slice();
   newrecord[/* render */9] = (function () {
-      if (js_files) {
-        var files = $$Array.map(Types$EasyDrive.fileFromJs, js_files[0]);
-        return React.createElement("ul", {
-                    className: "m0 px2"
-                  }, ($$Array.sort(foldersFirst, files), Utils$EasyDrive.arrayElem($$Array.map(file_to_list_item, files))));
-      } else {
-        return React.createElement("p", undefined, Utils$EasyDrive.stringElem("Loading files..."));
-      }
+      return React.createElement("ul", {
+                  className: "m0 px2"
+                }, ($$Array.sort(foldersFirst, files), Utils$EasyDrive.arrayElem($$Array.map(file_to_list_item, files))));
     });
   return newrecord;
 }
 
 var $$default = ReasonReact.wrapReasonForJs(component, (function (jsProps) {
-        return make(Js_primitive.null_undefined_to_opt(jsProps.files), Js_primitive.null_undefined_to_opt(jsProps.currentFile), jsProps.onClickFile, /* array */[]);
+        return make($$Array.map(Types$EasyDrive.fileFromJs, jsProps.files), Js_primitive.null_undefined_to_opt(jsProps.currentFile), jsProps.onClickFile, /* array */[]);
       }));
 
 export {
