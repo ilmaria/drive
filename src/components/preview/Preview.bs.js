@@ -4,7 +4,6 @@
 import * as ReasonReact        from "reason-react/src/ReasonReact.js";
 import * as Pdf$EasyDrive      from "./Pdf.bs.js";
 import * as Image$EasyDrive    from "./Image.bs.js";
-import * as Types$EasyDrive    from "../Types.bs.js";
 import * as Utils$EasyDrive    from "../../Utils.bs.js";
 import * as Markdown$EasyDrive from "./Markdown.bs.js";
 
@@ -32,15 +31,9 @@ function make(file, _) {
   return newrecord;
 }
 
-var $$default = ReasonReact.wrapReasonForJs(component, (function (jsProps) {
-        return make(Types$EasyDrive.fileFromJs(jsProps.file), /* array */[]);
-      }));
-
 export {
   component ,
   make      ,
-  $$default ,
-  $$default   as default,
   
 }
 /*  Not a pure module */

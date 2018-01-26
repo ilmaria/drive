@@ -4,7 +4,7 @@ open Utils;
 
 let component = ReasonReact.statelessComponent("Preview");
 
-let make = (~file: Types.file, _children) => {
+let make = (~file: Type.file, _children) => {
   ...component,
   render: (_self) => {
     let webContentLink = Js.Nullable.to_opt(file.webContentLink);
@@ -21,9 +21,3 @@ let make = (~file: Types.file, _children) => {
     }
   }
 };
-
-let default =
-  ReasonReact.wrapReasonForJs(
-    ~component,
-    (jsProps) => make(~file=Types.fileFromJs(jsProps##file), [||])
-  );

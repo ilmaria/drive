@@ -26,9 +26,29 @@ function fileFromJs(param) {
         ];
 }
 
+function userToJs(param) {
+  return {
+          id: param[/* id */0],
+          name: param[/* name */1],
+          imageUrl: param[/* imageUrl */2],
+          email: param[/* email */3]
+        };
+}
+
+function userFromJs(param) {
+  return /* record */[
+          /* id */param.id,
+          /* name */param.name,
+          /* imageUrl */param.imageUrl,
+          /* email */param.email
+        ];
+}
+
 export {
   fileToJs   ,
   fileFromJs ,
+  userToJs   ,
+  userFromJs ,
   
 }
 /* No side effect */

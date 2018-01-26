@@ -6,22 +6,22 @@ let component = ReasonReact.statelessComponent("FolderView");
 
 let make =
     (
-      ~files: array(Types.file),
-      ~current_file: option(Types.file)=?,
-      ~on_click_file: (Types.abs_file, _) => unit,
+      ~files: array(Type.file),
+      ~current_file: option(Type.file)=?,
+      ~on_click_file: Type.file => unit,
       _children
     ) => {
-  let file_to_list_item = (file: Types.file) => {
+  let file_to_list_item = (file: Type.file) => {
     let selected =
       switch current_file {
       | Some(current) => current.id == file.id
       | None => false
       };
-    <div onClick=(on_click_file(Types.fileToJs(file))) key=file.id>
+    <div onClick=((_event) => on_click_file(file)) key=file.id>
       <li> <FileItem selected name=file.name icon_link=file.iconLink /> </li>
     </div>
   };
-  let foldersFirst = (a: Types.file, b: Types.file) => {
+  let foldersFirst = (a: Type.file, b: Type.file) => {
     let folder = "application/vnd.google-apps.folder";
     let a_is_folder = a.mimeType === folder;
     if (a.mimeType === b.mimeType) {
@@ -43,15 +43,3 @@ let make =
       </ul>
   }
 };
-
-let default =
-  ReasonReact.wrapReasonForJs(
-    ~component,
-    (jsProps) =>
-      make(
-        ~files=Array.map(Types.fileFromJs, jsProps##files),
-        ~current_file=?Js.Nullable.to_opt(jsProps##currentFile),
-        ~on_click_file=jsProps##onClickFile,
-        [||]
-      )
-  );

@@ -21,15 +21,9 @@ function make(src, alt, _) {
   return newrecord;
 }
 
-var $$default = ReasonReact.wrapReasonForJs(component, (function (jsProps) {
-        return make(jsProps.src, jsProps.alt, /* array */[]);
-      }));
-
 export {
   component ,
   make      ,
-  $$default ,
-  $$default   as default,
   
 }
 /*  Not a pure module */

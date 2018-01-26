@@ -12,14 +12,14 @@ var searchIcon = ( require('../../images/icons/search.svg') );
 
 var component = ReasonReact.statelessComponent("Navbar");
 
-function make(menuCallback, searchCallback, _) {
+function make(menu_callback, search_callback, _) {
   var newrecord = component.slice();
   newrecord[/* render */9] = (function () {
       return React.createElement("nav", {
                   className: "flex items-center justify-between"
                 }, React.createElement("button", {
                       className: "no-btn mx2",
-                      onClick: menuCallback
+                      onClick: menu_callback
                     }, React.createElement("img", {
                           alt: "Menu icon",
                           src: menuIcon
@@ -27,7 +27,7 @@ function make(menuCallback, searchCallback, _) {
                       placeholder: "Search"
                     }), React.createElement("button", {
                       className: "no-btn mx2",
-                      onClick: searchCallback
+                      onClick: search_callback
                     }, React.createElement("img", {
                           alt: "Menu icon",
                           src: searchIcon
@@ -36,17 +36,11 @@ function make(menuCallback, searchCallback, _) {
   return newrecord;
 }
 
-var $$default = ReasonReact.wrapReasonForJs(component, (function (jsProps) {
-        return make(jsProps.menuCallback, jsProps.searchCallback, /* array */[]);
-      }));
-
 export {
   menuIcon   ,
   searchIcon ,
   component  ,
   make       ,
-  $$default  ,
-  $$default    as default,
   
 }
 /*  Not a pure module */

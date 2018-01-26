@@ -15,15 +15,9 @@ function make(content, _) {
   return newrecord;
 }
 
-var $$default = ReasonReact.wrapReasonForJs(component, (function (jsProps) {
-        return make(jsProps.content, /* array */[]);
-      }));
-
 export {
   component ,
   make      ,
-  $$default ,
-  $$default   as default,
   
 }
 /* component Not a pure module */

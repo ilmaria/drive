@@ -6,23 +6,16 @@ let searchIcon = [%bs.raw {| require('../../images/icons/search.svg') |}];
 
 let component = ReasonReact.statelessComponent("Navbar");
 
-let make = (~menuCallback, ~searchCallback, _children) => {
+let make = (~menu_callback, ~search_callback, _children) => {
   ...component,
   render: (_self) =>
     <nav className="flex items-center justify-between">
-      <button className="no-btn mx2" onClick=menuCallback>
+      <button className="no-btn mx2" onClick=menu_callback>
         <img src=menuIcon alt="Menu icon" />
       </button>
       <input placeholder="Search" />
-      <button className="no-btn mx2" onClick=searchCallback>
+      <button className="no-btn mx2" onClick=search_callback>
         <img src=searchIcon alt="Menu icon" />
       </button>
     </nav>
 };
-
-let default =
-  ReasonReact.wrapReasonForJs(
-    ~component,
-    (jsProps) =>
-      make(~menuCallback=jsProps##menuCallback, ~searchCallback=jsProps##searchCallback, [||])
-  );

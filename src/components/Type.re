@@ -8,3 +8,11 @@ type file = {
   iconLink: string,
   mimeType: string
 };
+
+[@bs.deriving {jsConverter: newType}]
+type user = {
+  id: string,
+  name: string,
+  imageUrl: string,
+  email: string
+};

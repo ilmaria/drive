@@ -6,8 +6,6 @@ import * as Curry              from "bs-platform/lib/es6/curry.js";
 import * as React              from "react";
 import * as $$String           from "bs-platform/lib/es6/string.js";
 import * as ReasonReact        from "reason-react/src/ReasonReact.js";
-import * as Js_primitive       from "bs-platform/lib/es6/js_primitive.js";
-import * as Types$EasyDrive    from "../Types.bs.js";
 import * as Utils$EasyDrive    from "../../Utils.bs.js";
 import * as FileItem$EasyDrive from "./FileItem.bs.js";
 
@@ -20,7 +18,9 @@ function make(files, current_file, on_click_file, _) {
     var selected = current_file ? +(current_file[0][/* id */0] === file[/* id */0]) : /* false */0;
     return React.createElement("div", {
                 key: file[/* id */0],
-                onClick: Curry._1(on_click_file, Types$EasyDrive.fileToJs(file))
+                onClick: (function () {
+                    return Curry._1(on_click_file, file);
+                  })
               }, React.createElement("li", undefined, ReasonReact.element(/* None */0, /* None */0, FileItem$EasyDrive.make(file[/* name */1], selected, file[/* iconLink */5], /* array */[]))));
   };
   var foldersFirst = function (a, b) {
@@ -42,15 +42,9 @@ function make(files, current_file, on_click_file, _) {
   return newrecord;
 }
 
-var $$default = ReasonReact.wrapReasonForJs(component, (function (jsProps) {
-        return make($$Array.map(Types$EasyDrive.fileFromJs, jsProps.files), Js_primitive.null_undefined_to_opt(jsProps.currentFile), jsProps.onClickFile, /* array */[]);
-      }));
-
 export {
   component ,
   make      ,
-  $$default ,
-  $$default   as default,
   
 }
 /*  Not a pure module */
