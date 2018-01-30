@@ -15,6 +15,7 @@ let component = ReasonReact.reducerComponent("EasyDrive");
 
 let make = (_children) => {
   ...component,
+  initialState: () => {view: Main, current_file: None},
   reducer: (action, state) =>
     switch action {
     | ShowView(view) => ReasonReact.Update({...state, view})
@@ -51,5 +52,4 @@ let make = (_children) => {
          )
     </GoogleData>
 };
-
-let default = ReasonReact.wrapReasonForJs(~component, (_jsProps) => make([||]));
+/* let default = ReasonReact.wrapReasonForJs(~component, (_jsProps) => make([||])); */
