@@ -48,8 +48,8 @@ export default class GoogleData extends React.Component {
 
     const client = google.client
     await client.init({
-      apiKey: process.env.REACT_APP_API_KEY,
-      clientId: process.env.REACT_APP_CLIENT_ID,
+      apiKey: process.env.API_KEY,
+      clientId: process.env.CLIENT_ID,
       scope: READ_SCOPE,
     })
 

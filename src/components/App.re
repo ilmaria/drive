@@ -1,6 +1,6 @@
 open Utils;
 
-let google_button = [%bs.raw {| require('../../images/google-button.svg') |}];
+let google_button = [%bs.raw {| require('../images/google-button.svg') |}];
 
 let component = ReasonReact.statelessComponent("App");
 
@@ -30,7 +30,7 @@ let make =
               get_files=(() => get_files_in_folder(current_dir))>
               ...(
                    (files) => {
-                     let files = Js.Nullable.to_opt(files);
+                     let files = Js.Nullable.toOption(files);
                      switch (files, current_file) {
                      | (Some(files), Some(current_file)) =>
                        <FolderView current_file on_click_file=select_file files />

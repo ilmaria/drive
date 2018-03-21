@@ -2,7 +2,7 @@ open Utils;
 
 [%bs.raw {| require('./FileItem.css') |}];
 
-let file_icon = [%bs.raw {| require('../../images/icons/file.png') |}];
+let file_icon = [%bs.raw {| require('../images/icons/file.png') |}];
 
 let component = ReasonReact.statelessComponent("FileItem");
 

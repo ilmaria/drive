@@ -1,8 +1,8 @@
 [%bs.raw {| require('./Navbar.css') |}];
 
-let menuIcon = [%bs.raw {| require('../../images/icons/menu.svg') |}];
+let menuIcon = [%bs.raw {| require('../images/icons/menu.svg') |}];
 
-let searchIcon = [%bs.raw {| require('../../images/icons/search.svg') |}];
+let searchIcon = [%bs.raw {| require('../images/icons/search.svg') |}];
 
 let component = ReasonReact.statelessComponent("Navbar");
 

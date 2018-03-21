@@ -7,7 +7,7 @@ let component = ReasonReact.statelessComponent("Preview");
 let make = (~file: Type.file, _children) => {
   ...component,
   render: (_self) => {
-    let webContentLink = Js.Nullable.to_opt(file.webContentLink);
+    let webContentLink = Js.Nullable.toOption(file.webContentLink);
     let url =
       switch webContentLink {
       | Some(link) => Js.String.replace("export=download", "export=view", link)
