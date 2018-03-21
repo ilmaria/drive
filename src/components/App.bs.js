@@ -9,6 +9,10 @@ import * as Preview$ReactTemplate from "./Preview.bs.js";
 import * as FolderView$ReactTemplate from "./FolderView.bs.js";
 import * as LocalCache$ReactTemplate from "./LocalCache.bs.js";
 
+(( require('./basscss.css') ));
+
+(( require('./App.css') ));
+
 var google_button = ( require('../images/google-button.svg') );
 
 var component = ReasonReact.statelessComponent("App");
@@ -48,4 +52,4 @@ export {
   make ,
   
 }
-/* google_button Not a pure module */
+/*  Not a pure module */
