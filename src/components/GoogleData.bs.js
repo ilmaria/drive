@@ -4,7 +4,7 @@ import * as ReasonReact from "reason-react/src/ReasonReact.js";
 import * as GoogleData from "./GoogleData";
 
 function make(children) {
-  return ReasonReact.wrapJsForReason(GoogleData, { }, children);
+  return ReasonReact.wrapJsForReason(GoogleData.default, { }, children);
 }
 
 export {

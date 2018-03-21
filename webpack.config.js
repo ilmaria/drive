@@ -2,15 +2,17 @@ const path = require('path')
 const webpack = require('webpack')
 const HtmlWebpackPlugin = require('html-webpack-plugin')
 //const CompressionPlugin = require("compression-webpack-plugin")
-const InterpolateHtmlPlugin = require('react-dev-utils/InterpolateHtmlPlugin')
-const getClientEnvironment = require('./env')
+const InterpolateHtmlPlugin = require('./scripts/InterpolateHtmlPlugin')
+const getClientEnvironment = require('./scripts/env')
 
 function insertIf(condition, ...elements) {
   return condition ? elements : []
 }
 
-module.exports = (env, options) => {
+module.exports = (_, options) => {
   const production = options.mode === 'production'
+  const env = process.env
+  env.NODE_ENV = options.mode || 'test'
   const publicUrl = ''
   // Get environment variables to inject into our app.
   const dotenv = getClientEnvironment(env, publicUrl)
@@ -77,7 +79,7 @@ module.exports = (env, options) => {
             }
           : false,
       }),
-      new InterpolateHtmlPlugin(env.raw),
+      new InterpolateHtmlPlugin(dotenv.raw),
       new webpack.DefinePlugin(dotenv.stringified),
     ],
   }
