@@ -6,12 +6,12 @@ let component = ReasonReact.statelessComponent("FolderView");
 
 let make =
     (
-      ~files: array(Type.file),
-      ~current_file: option(Type.file)=?,
-      ~on_click_file: Type.file => unit,
+      ~files: array(GoogleDrive.file),
+      ~current_file: option(GoogleDrive.file)=?,
+      ~on_click_file: GoogleDrive.file => unit,
       _children
     ) => {
-  let file_to_list_item = (file: Type.file) => {
+  let file_to_list_item = (file: GoogleDrive.file) => {
     let selected =
       switch current_file {
       | Some(current) => current.id == file.id
@@ -21,7 +21,7 @@ let make =
       <li> <FileItem selected name=file.name icon_link=file.iconLink /> </li>
     </div>
   };
-  let foldersFirst = (a: Type.file, b: Type.file) => {
+  let foldersFirst = (a: GoogleDrive.file, b: GoogleDrive.file) => {
     let folder = "application/vnd.google-apps.folder";
     let a_is_folder = a.mimeType === folder;
     if (a.mimeType === b.mimeType) {

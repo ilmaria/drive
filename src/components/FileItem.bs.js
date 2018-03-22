@@ -2,7 +2,7 @@
 
 import * as React from "react";
 import * as ReasonReact from "reason-react/src/ReasonReact.js";
-import * as Utils$ReactTemplate from "../Utils.bs.js";
+import * as Utils$Drive from "../Utils.bs.js";
 
 (( require('./FileItem.css') ));
 
@@ -24,7 +24,7 @@ function make(name, selected, icon_link, _) {
                       width: "30px"
                     }), React.createElement("span", {
                       className: "file-item-name flex-auto ellipsis"
-                    }, Utils$ReactTemplate.stringElem(name)));
+                    }, Utils$Drive.stringElem(name)));
     });
   return newrecord;
 }

@@ -4,7 +4,7 @@ open Utils;
 
 let component = ReasonReact.statelessComponent("Preview");
 
-let make = (~file: Type.file, _children) => {
+let make = (~file: GoogleDrive.file, _children) => {
   ...component,
   render: (_self) => {
     let webContentLink = Js.Nullable.toOption(file.webContentLink);

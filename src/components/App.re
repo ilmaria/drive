@@ -10,12 +10,12 @@ let component = ReasonReact.statelessComponent("App");
 
 let make =
     (
-      ~user: option(Type.user),
-      ~current_file: option(Type.file),
+      ~user: option(GoogleDrive.user),
+      ~current_file: option(GoogleDrive.file),
       ~current_dir: string,
-      ~select_file: Type.file => unit,
-      ~get_files_in_folder: string => Js.Promise.t(list(Type.file)),
-      ~get_recent_files: unit => Js.Promise.t(list(Type.file)),
+      ~select_file: GoogleDrive.file => unit,
+      ~get_files_in_folder: string => Js.Promise.t(list(GoogleDrive.file)),
+      ~get_recent_files: unit => Js.Promise.t(list(GoogleDrive.file)),
       ~login: unit => Js.Promise.t(bool),
       ~open_menu,
       ~start_search,

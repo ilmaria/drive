@@ -4,11 +4,11 @@ type view =
 
 type action =
   | ShowView(view)
-  | SelectFile(Type.file);
+  | SelectFile(GoogleDrive.file);
 
 type state = {
   view,
-  current_file: option(Type.file)
+  current_file: option(GoogleDrive.file)
 };
 
 let component = ReasonReact.reducerComponent("EasyDrive");
