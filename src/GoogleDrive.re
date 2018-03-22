@@ -19,7 +19,14 @@ type user = {
 
 type google_user = {. getBasicProfile: unit => Js.nullable(abs_user)};
 
-type current_google_user = {. get: unit => google_user, listen: (google_user => unit) => unit};
+class type _current_google_user =
+  [@bs]
+  {
+    pub get: unit => google_user;
+    pub listen: (google_user => unit) => unit
+  };
+
+type current_google_user = Js.t(_current_google_user);
 
 type auth_instance = {. "currentUser": current_google_user};
 
@@ -61,10 +68,10 @@ let init = (callback) =>
       |> ignore
   );
 
-let listen_user_changes = (~token: token, ~callback) => {
+let listen_user_changes = (token: token, callback) => {
   let Token = token;
   let auth_instance = get_auth_instance();
-  auth_instance##currentUser#listen(
+  auth_instance##currentUser##listen(
     (user) => {
       let profile = user#getBasicProfile() |> Js.toOption;
       let user =
@@ -76,8 +83,9 @@ let listen_user_changes = (~token: token, ~callback) => {
     }
   )
 };
-/* let login = (~token) => {};
 
-   let recent_files = (~token) => {};
+let login = (token) => ();
 
-   let files_in_folder = (~token, id) => {}; */
+let recent_files = (token) => ();
+
+let files_in_folder = (token, id) => ();
