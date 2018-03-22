@@ -17,53 +17,54 @@ type user = {
   email: string
 };
 
-type api_client = {
-  .
-  [@bs.meth] init : {. "apiKey": string, "clientId": string, "scope": string} => Js.Promise.t(unit)
-};
-
 type google_user = {. getBasicProfile: unit => Js.nullable(abs_user)};
 
 type current_google_user = {. get: unit => google_user, listen: (google_user => unit) => unit};
 
-type auth_instance = {. currentUser: current_google_user};
+type auth_instance = {. "currentUser": current_google_user};
 
-type google_api = {
-  .
-  load: (string, unit => unit) => unit,
-  client: api_client,
-  auth2: {. getAuthInstance: unit => auth_instance}
-};
+[@bs.scope ("window", "gapi")] [@bs.val]
+external load_google_api : (string, unit => unit) => unit =
+  "load";
+
+[@bs.scope ("window", "gapi", "client")] [@bs.val]
+external init_client :
+  {. "apiKey": string, "clientId": string, "scope": string} => Js.Promise.t(unit) =
+  "init";
+
+[@bs.scope ("window", "gapi", "auth2")] [@bs.val]
+external get_auth_instance : unit => auth_instance =
+  "getAuthInstance";
 
 type token =
-  | Token(google_api);
+  | Token;
 
 let read_scope = "https://www.googleapis.com/auth/drive.readonly";
 
 let write_scope = "https://www.googleapis.com/auth/drive";
 
-let init = (~google_api: google_api, ~callback) : unit =>
-  google_api#load(
+let init = (callback) =>
+  load_google_api(
     "client:auth2",
     () =>
-      google_api#client#init({
+      init_client({
         "apiKey": "process.env.API_KEY",
         "clientId": "process.env.CLIENT_ID",
         "scope": read_scope
       })
       |> Js.Promise.then_(
            () => {
-             callback(Token(google_api));
+             callback(Token);
              Js.Promise.resolve()
            }
          )
       |> ignore
   );
 
-let listen_user_changes = (~token, ~callback) => {
-  let Token(google_api) = token;
-  let auth_instance = google_api#auth2#getAuthInstance();
-  auth_instance#currentUser#listen(
+let listen_user_changes = (~token: token, ~callback) => {
+  let Token = token;
+  let auth_instance = get_auth_instance();
+  auth_instance##currentUser#listen(
     (user) => {
       let profile = user#getBasicProfile() |> Js.toOption;
       let user =
@@ -75,9 +76,8 @@ let listen_user_changes = (~token, ~callback) => {
     }
   )
 };
+/* let login = (~token) => {};
 
-let login = (~token) => {};
+   let recent_files = (~token) => {};
 
-let recent_files = (~token) => {};
-
-let files_in_folder = (~token, id) => {};
+   let files_in_folder = (~token, id) => {}; */

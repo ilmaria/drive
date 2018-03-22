@@ -48,28 +48,26 @@ function userFromJs(param) {
 
 var read_scope = "https://www.googleapis.com/auth/drive.readonly";
 
-function init(google_api, callback) {
-  return Caml_oo_curry.js3(-944268762, 3, google_api, "client:auth2", (function () {
-                var tmp = Caml_oo_curry.js1(173001291, 1, google_api);
-                Caml_oo_curry.js2(-977585392, 2, tmp, {
-                        apiKey: "process.env.API_KEY",
-                        clientId: "process.env.CLIENT_ID",
-                        scope: read_scope
-                      }).then((function () {
-                        Curry._1(callback, /* Token */[google_api]);
-                        return Promise.resolve(/* () */0);
-                      }));
-                return /* () */0;
-              }));
+function init(callback) {
+  window.gapi.load("client:auth2", (function () {
+          window.gapi.client.init({
+                  apiKey: "process.env.API_KEY",
+                  clientId: "process.env.CLIENT_ID",
+                  scope: read_scope
+                }).then((function () {
+                  Curry._1(callback, /* Token */0);
+                  return Promise.resolve(/* () */0);
+                }));
+          return /* () */0;
+        }));
+  return /* () */0;
 }
 
-function listen_user_changes(token, callback) {
-  var tmp = token[0];
-  var tmp$1 = Caml_oo_curry.js1(663526346, 4, tmp);
-  var auth_instance = Caml_oo_curry.js2(-109201197, 5, tmp$1, /* () */0);
-  var tmp$2 = Caml_oo_curry.js1(104819492, 6, auth_instance);
-  return Caml_oo_curry.js2(-268842937, 8, tmp$2, (function (user) {
-                var profile = Caml_oo_curry.js2(-401773103, 7, user, /* () */0);
+function listen_user_changes(_, callback) {
+  var auth_instance = window.gapi.auth2.getAuthInstance();
+  var tmp = Caml_oo_curry.js1(104819492, 1, auth_instance);
+  return Caml_oo_curry.js2(-268842937, 3, tmp, (function (user) {
+                var profile = Caml_oo_curry.js2(-401773103, 2, user, /* () */0);
                 return Curry._1(callback, (profile == null) ? /* None */0 : /* Some */[userFromJs(profile)]);
               }));
 }

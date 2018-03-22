@@ -5,8 +5,8 @@ import * as Curry from "bs-platform/lib\\es6/curry.js";
 import * as React from "react";
 import * as $$String from "bs-platform/lib\\es6/string.js";
 import * as ReasonReact from "reason-react/src/ReasonReact.js";
-import * as Utils$ReactTemplate from "../Utils.bs.js";
-import * as FileItem$ReactTemplate from "./FileItem.bs.js";
+import * as Utils$Drive from "../Utils.bs.js";
+import * as FileItem$Drive from "./FileItem.bs.js";
 
 (( require('./FolderView.css') ));
 
@@ -20,7 +20,7 @@ function make(files, current_file, on_click_file, _) {
                 onClick: (function () {
                     return Curry._1(on_click_file, file);
                   })
-              }, React.createElement("li", undefined, ReasonReact.element(/* None */0, /* None */0, FileItem$ReactTemplate.make(file[/* name */1], selected, file[/* iconLink */5], /* array */[]))));
+              }, React.createElement("li", undefined, ReasonReact.element(/* None */0, /* None */0, FileItem$Drive.make(file[/* name */1], selected, file[/* iconLink */5], /* array */[]))));
   };
   var foldersFirst = function (a, b) {
     var a_is_folder = +(a[/* mimeType */6] === "application/vnd.google-apps.folder");
@@ -36,7 +36,7 @@ function make(files, current_file, on_click_file, _) {
   newrecord[/* render */9] = (function () {
       return React.createElement("ul", {
                   className: "m0 px2"
-                }, ($$Array.sort(foldersFirst, files), Utils$ReactTemplate.arrayElem($$Array.map(file_to_list_item, files))));
+                }, ($$Array.sort(foldersFirst, files), Utils$Drive.arrayElem($$Array.map(file_to_list_item, files))));
     });
   return newrecord;
 }

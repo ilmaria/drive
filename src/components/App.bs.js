@@ -3,11 +3,11 @@
 import * as Curry from "bs-platform/lib\\es6/curry.js";
 import * as React from "react";
 import * as ReasonReact from "reason-react/src/ReasonReact.js";
-import * as Utils$ReactTemplate from "../Utils.bs.js";
-import * as Navbar$ReactTemplate from "./Navbar.bs.js";
-import * as Preview$ReactTemplate from "./Preview.bs.js";
-import * as FolderView$ReactTemplate from "./FolderView.bs.js";
-import * as LocalCache$ReactTemplate from "./LocalCache.bs.js";
+import * as Utils$Drive from "../Utils.bs.js";
+import * as Navbar$Drive from "./Navbar.bs.js";
+import * as Preview$Drive from "./Preview.bs.js";
+import * as FolderView$Drive from "./FolderView.bs.js";
+import * as LocalCache$Drive from "./LocalCache.bs.js";
 
 (( require('./basscss.css') ));
 
@@ -20,15 +20,15 @@ var component = ReasonReact.statelessComponent("App");
 function make(user, current_file, current_dir, select_file, get_files_in_folder, _, login, open_menu, start_search, _$1) {
   var newrecord = component.slice();
   newrecord[/* render */9] = (function () {
-      return React.createElement("main", undefined, ReasonReact.element(/* None */0, /* None */0, Navbar$ReactTemplate.make(open_menu, start_search, /* array */[])), React.createElement("div", {
+      return React.createElement("main", undefined, ReasonReact.element(/* None */0, /* None */0, Navbar$Drive.make(open_menu, start_search, /* array */[])), React.createElement("div", {
                       className: "filelist"
-                    }, user ? ReasonReact.element(/* None */0, /* None */0, LocalCache$ReactTemplate.make(user[0][/* id */0] + current_dir, (function () {
+                    }, user ? ReasonReact.element(/* None */0, /* None */0, LocalCache$Drive.make(user[0][/* id */0] + current_dir, (function () {
                                   return Curry._1(get_files_in_folder, current_dir);
                                 }), (function (files) {
                                   if (!(files == null) && current_file) {
-                                    return ReasonReact.element(/* None */0, /* None */0, FolderView$ReactTemplate.make(files, /* Some */[current_file[0]], select_file, /* array */[]));
+                                    return ReasonReact.element(/* None */0, /* None */0, FolderView$Drive.make(files, /* Some */[current_file[0]], select_file, /* array */[]));
                                   } else {
-                                    return Utils$ReactTemplate.stringElem("Loading files...");
+                                    return Utils$Drive.stringElem("Loading files...");
                                   }
                                 }))) : React.createElement("button", {
                             className: "google-sign-in",
@@ -41,7 +41,7 @@ function make(user, current_file, current_dir, select_file, get_files_in_folder,
                                 src: google_button
                               }))), React.createElement("div", {
                       className: "preview"
-                    }, current_file ? ReasonReact.element(/* None */0, /* None */0, Preview$ReactTemplate.make(current_file[0], /* array */[])) : null));
+                    }, current_file ? ReasonReact.element(/* None */0, /* None */0, Preview$Drive.make(current_file[0], /* array */[])) : null));
     });
   return newrecord;
 }

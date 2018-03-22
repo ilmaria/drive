@@ -2,17 +2,17 @@
 
 import * as Block from "bs-platform/lib\\es6/block.js";
 import * as Curry from "bs-platform/lib\\es6/curry.js";
+import * as App$Drive from "./App.bs.js";
 import * as ReasonReact from "reason-react/src/ReasonReact.js";
-import * as App$ReactTemplate from "./App.bs.js";
-import * as GoogleData$ReactTemplate from "./GoogleData.bs.js";
+import * as GoogleData$Drive from "./GoogleData.bs.js";
 
 var component = ReasonReact.reducerComponent("EasyDrive");
 
 function make() {
   var newrecord = component.slice();
   newrecord[/* render */9] = (function (self) {
-      return ReasonReact.element(/* None */0, /* None */0, GoogleData$ReactTemplate.make((function (user, login, get_files_in_folder, get_recent_files) {
-                        return ReasonReact.element(/* None */0, /* None */0, App$ReactTemplate.make(user, self[/* state */2][/* current_file */1], "root", (function (file) {
+      return ReasonReact.element(/* None */0, /* None */0, GoogleData$Drive.make((function (user, login, get_files_in_folder, get_recent_files) {
+                        return ReasonReact.element(/* None */0, /* None */0, App$Drive.make(user, self[/* state */2][/* current_file */1], "root", (function (file) {
                                           return Curry._1(self[/* send */4], /* SelectFile */Block.__(1, [file]));
                                         }), get_files_in_folder, get_recent_files, login, (function () {
                                           return /* () */0;
