@@ -17,16 +17,12 @@ type user = {
   email: string
 };
 
-type google_user = {. getBasicProfile: unit => Js.nullable(abs_user)};
+type google_user = {. "getBasicProfile": [@bs.meth] (unit => Js.nullable(abs_user))};
 
-class type _current_google_user =
-  [@bs]
-  {
-    pub get: unit => google_user;
-    pub listen: (google_user => unit) => unit
-  };
-
-type current_google_user = Js.t(_current_google_user);
+type current_google_user = {
+  .
+  "get": [@bs.meth] (unit => google_user), "listen": [@bs.meth] ((google_user => unit) => unit)
+};
 
 type auth_instance = {. "currentUser": current_google_user};
 
@@ -73,7 +69,7 @@ let listen_user_changes = (token: token, callback) => {
   let auth_instance = get_auth_instance();
   auth_instance##currentUser##listen(
     (user) => {
-      let profile = user#getBasicProfile() |> Js.toOption;
+      let profile = user##getBasicProfile() |> Js.toOption;
       let user =
         switch profile {
         | Some(user_profile) => Some(userFromJs(user_profile))

@@ -2,13 +2,7 @@
 
 import * as Jest from "@glennsl/bs-jest/src/jest.js";
 import * as Curry from "bs-platform/lib\\es6/curry.js";
-import * as CamlinternalOO from "bs-platform/lib\\es6/camlinternalOO.js";
 import * as GoogleDrive$Drive from "../GoogleDrive.bs.js";
-
-var shared = [
-  "listen",
-  "get"
-];
 
 var mock_user = /* record */[
   /* id */"id",
@@ -17,40 +11,19 @@ var mock_user = /* record */[
   /* email */"email"
 ];
 
-var $$class = CamlinternalOO.create_table(["getBasicProfile"]);
+var mock_google_user = ( {
+  getBasicProfile: () => ({
+    id: "id",
+    name: "name",
+    imageUrl: "url",
+    email: "email"
+  })
+} );
 
-var getBasicProfile = CamlinternalOO.get_method_label($$class, "getBasicProfile");
-
-CamlinternalOO.set_method($$class, getBasicProfile, (function (_, _$1) {
-        return GoogleDrive$Drive.userToJs(mock_user);
-      }));
-
-CamlinternalOO.init_class($$class);
-
-var mock_google_user = CamlinternalOO.create_object_opt(0, $$class);
-
-var $$class$1 = CamlinternalOO.create_table(shared);
-
-var ids = CamlinternalOO.get_method_labels($$class$1, shared);
-
-var listen = ids[0];
-
-var get = ids[1];
-
-CamlinternalOO.set_methods($$class$1, /* array */[
-      get,
-      (function (_, _$1) {
-          return mock_google_user;
-        }),
-      listen,
-      (function (_, _$1) {
-          return /* () */0;
-        })
-    ]);
-
-CamlinternalOO.init_class($$class$1);
-
-var mock_current_user = CamlinternalOO.create_object_opt(0, $$class$1);
+var mock_current_user = ( {
+  get: () => mock_user,
+  listen: () => {}
+} );
 
 var mock_auth_instance = {
   currentUser: mock_current_user
@@ -67,7 +40,7 @@ describe("GoogleDrive", (function () {
                                     GoogleDrive$Drive.listen_user_changes(token, (function (user) {
                                             return Curry._1(assertion, Jest.Expect[/* toBe */2](/* Some */[mock_user], Jest.Expect[/* expect */0](user)));
                                           }));
-                                    return /* () */0;
+                                    return GoogleDrive$Drive.login(token);
                                   }));
                     }));
       }));
@@ -79,4 +52,4 @@ export {
   mock_auth_instance ,
   
 }
-/* class Not a pure module */
+/* mock_google_user Not a pure module */
