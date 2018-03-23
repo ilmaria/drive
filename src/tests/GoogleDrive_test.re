@@ -15,14 +15,21 @@ let mock_google_user: GoogleDrive.google_user = [%bs.raw
 } |}
 ];
 
+let registered_callback = [%bs.raw {| function() {} |}];
+
 let mock_current_user: GoogleDrive.current_google_user = [%bs.raw
   {| {
   get: () => mock_user,
-  listen: () => {}
+  listen: (callback) => { registered_callback = callback }
 } |}
 ];
 
-let mock_auth_instance: GoogleDrive.auth_instance = {"currentUser": mock_current_user};
+let mock_auth_instance: GoogleDrive.auth_instance = [%bs.raw
+  {| {
+  currentUser: () => mock_current_user,
+  signIn: () => { registered_callback(mock_user) }
+} |}
+];
 
 describe(
   "GoogleDrive",

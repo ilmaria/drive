@@ -20,14 +20,17 @@ var mock_google_user = ( {
   })
 } );
 
+var registered_callback = ( function() {} );
+
 var mock_current_user = ( {
   get: () => mock_user,
-  listen: () => {}
+  listen: (callback) => { registered_callback = callback }
 } );
 
-var mock_auth_instance = {
-  currentUser: mock_current_user
-};
+var mock_auth_instance = ( {
+  currentUser: () => mock_current_user,
+  signIn: () => { registered_callback(mock_user) }
+} );
 
 describe("GoogleDrive", (function () {
         Jest.testAsync(/* None */0, "should initialize", (function (assertion) {
@@ -48,6 +51,7 @@ describe("GoogleDrive", (function () {
 export {
   mock_user ,
   mock_google_user ,
+  registered_callback ,
   mock_current_user ,
   mock_auth_instance ,
   
