@@ -5,7 +5,7 @@
     "build": "bsb -make-world && webpack --mode production",
     "start": "node scripts/start.js",
     "clean": "bsb -clean-world",
-    "test": "jest"
+    "test": "node scripts/test.js"
   },
   "keywords": ["BuckleScript"],
   "author": "",
@@ -16,9 +16,6 @@
     "reason-react": "^0.3.4"
   },
   "devDependencies": {
-    "@glennsl/bs-jest": "^0.4.2",
-    "babel-core": "^6.26.0",
-    "babel-jest": "^22.4.3",
     "bs-platform": "^2.2.3",
     "css-loader": "^0.28.11",
     "extract-text-webpack-plugin": "^3.0.2",
@@ -31,9 +28,6 @@
     "webpack-dev-server": "^3.1.1"
   },
   "jest": {
-    "testMatch": ["**/tests/**/*.js"],
-    "transform": {
-      "^.+\\.js$": "babel-jest"
-    }
+    "testMatch": ["**/tests/**/*.js"]
   }
 }
