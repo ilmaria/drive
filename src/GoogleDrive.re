@@ -27,6 +27,7 @@ type current_google_user = {
 type auth_instance = {. "currentUser": current_google_user, "signIn": [@bs.meth] (unit => unit)};
 
 type api_result = {. "nextPageToken": Js.nullable(string), "files": Js.Array.t(abs_file)};
+
 type api_response = {. "result": api_result};
 
 [@bs.scope ("window", "gapi")] [@bs.val]
@@ -39,15 +40,15 @@ external init_client :
   "init";
 
 [@bs.scope ("window", "gapi", "client")] [@bs.val]
-external fetch : {. "path": string, "params": Js.t('a)} => Js.Promise.t(api_response) =
+external client_request : {. "path": string, "params": Js.t('a)} => Js.Promise.t(api_response) =
   "request";
 
 [@bs.scope ("window", "gapi", "auth2")] [@bs.val]
 external get_auth_instance : unit => auth_instance =
   "getAuthInstance";
 
-type token =
-  | Token;
+type api_client =
+  | ApiClient;
 
 let read_scope = "https://www.googleapis.com/auth/drive.readonly";
 
@@ -64,7 +65,7 @@ let init = (callback) =>
       })
       |> Js.Promise.then_(
            () => {
-             callback(Token);
+             callback(ApiClient);
              Js.Promise.resolve()
            }
          )
@@ -79,8 +80,8 @@ let user_to_profile = (google_user: google_user) => {
   }
 };
 
-let listen_user_changes = (token: token, callback) => {
-  let Token = token;
+let listen_user_changes = (client: api_client, callback) => {
+  let ApiClient = client;
   let auth_instance = get_auth_instance();
   let current_user = auth_instance##currentUser##get() |> user_to_profile;
   /* Initial call to callback with current user */
@@ -89,23 +90,14 @@ let listen_user_changes = (token: token, callback) => {
   auth_instance##currentUser##listen((new_user) => callback(user_to_profile(new_user)))
 };
 
-let login = (token) => {
-  let Token = token;
+let login = (client) => {
+  let ApiClient = client;
   let auth_instance = get_auth_instance();
   auth_instance##signIn()
 };
 
-let recent_files = (token) => {
-  let Token = token;
-  ()
-};
-
-let files_in_folder = (token, id) => {
-  let Token = token;
-  ()
-};
-
-let rec fetch_files = (params): Js.Promise.t(array(file)) => {
+let rec fetch_files = (client, params, callback: array(file) => unit) : unit => {
+  let ApiClient = client;
   let default_params = {
     "corpora": "user",
     "fields":
@@ -117,21 +109,37 @@ let rec fetch_files = (params): Js.Promise.t(array(file)) => {
       ++ "nextPageToken"
   };
   let parameters = Js.Obj.assign(default_params, params);
-  fetch({"path": "https://www.googleapis.com/drive/v3/files", "params": parameters})
-  |> Js.Promise.then_((response) => {
-    let result = response##result;
-    let current_files = Array.map(fileFromJs, result##files);
-    switch (Js.toOption(result##nextPageToken)) {
-      | Some(token) => {
-        let new_params = Js.Obj.assign(parameters, {"pageToken": token});
-        fetch_files(new_params)
-        |> Js.Promise.then_((next_files) => {
-          next_files
-          |> Js.Array.concat(current_files)
-          |> Js.Promise.resolve
-        })
-      }
-      | None => Js.Promise.resolve(current_files)
-    }
-  })
+  let _ =
+    client_request({"path": "https://www.googleapis.com/drive/v3/files", "params": parameters})
+    |> Js.Promise.then_(
+         (response) => {
+           let result = response##result;
+           let current_files = Array.map(fileFromJs, result##files);
+           switch (Js.toOption(result##nextPageToken)) {
+           | Some(token) =>
+             let new_params = Js.Obj.assign(parameters, {"pageToken": token});
+             fetch_files(
+               client,
+               new_params,
+               (next_files) => {
+                 let all_files = Js.Array.concat(current_files, next_files);
+                 callback(all_files)
+               }
+             )
+             |> Js.Promise.resolve
+           | None => callback(current_files) |> Js.Promise.resolve
+           }
+         }
+       );
+  ()
+};
+
+let recent_files = (client, callback) => {
+  let params = {"orderBy": "viewdByMeTime desc"};
+  fetch_files(client, params, callback)
+};
+
+let files_in_folder = (client, folder_id, callback) => {
+  let params = {"orderBy": "name", "q": "'" ++ folder_id ++ "' in parents"};
+  fetch_files(client, params, callback)
 };

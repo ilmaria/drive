@@ -7,7 +7,9 @@
     "clean": "bsb -clean-world",
     "test": "node scripts/test.js"
   },
-  "keywords": ["BuckleScript"],
+  "keywords": [
+    "BuckleScript"
+  ],
   "author": "",
   "license": "MIT",
   "dependencies": {
@@ -28,6 +30,8 @@
     "webpack-dev-server": "^3.1.1"
   },
   "jest": {
-    "testMatch": ["**/tests/**/*.js"]
+    "testMatch": [
+      "**/tests/**/*.js"
+    ]
   }
 }

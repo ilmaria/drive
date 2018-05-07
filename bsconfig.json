@@ -13,6 +13,6 @@
   ],
   "suffix": ".bs.js",
   "namespace": true,
-  "bs-dependencies": ["reason-react", "@glennsl/bs-jest"],
+  "bs-dependencies": ["reason-react"],
   "refmt": 3
 }
