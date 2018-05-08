@@ -1,32 +1,56 @@
+type id = string;
+
 type view =
-  | Main
-  | Folder(string);
+  | Home
+  | File(id)
+  | Folder(id);
 
 type action =
-  | ShowView(view)
-  | UpdateClient(GoogleDrive.api_client)
-  | SelectFile(GoogleDrive.file);
+  | ShowHome
+  | ShowFile(id)
+  | ShowFolder(id)
+  | ClientReady(GoogleDrive.api_client)
+  | Login(GoogleDrive.user)
+  | Logout;
 
 type state = {
   view,
   api_client: option(GoogleDrive.api_client),
-  current_file: option(GoogleDrive.file)
+  user: option(GoogleDrive.user)
+};
+
+let login = (send, state) => {
+  switch state.api_client {
+  | Some(api_client) => GoogleDrive.login(api_client, (user) => send(Login(user)))
+  | None => ()
+  };
 };
 
 let component = ReasonReact.reducerComponent("EasyDrive");
 
 let make = (_children) => {
   ...component,
-  initialState: () => {view: Main, api_client: None, current_file: None},
+  initialState: () => {view: Home, api_client: None, user: None},
   didMount: (_self) =>
     ReasonReact.SideEffects(
-      (self) => GoogleDrive.init((api_client) => self.send(UpdateClient(api_client)))
+      (self) => GoogleDrive.init((api_client) => self.send(ClientReady(api_client)))
     ),
   reducer: (action, state) =>
-    switch action {
-    | ShowView(view) => ReasonReact.Update({...state, view})
-    | UpdateClient(api_client) => ReasonReact.Update({...state, api_client: Some(api_client)})
-    | SelectFile(file) => ReasonReact.Update({...state, current_file: Some(file)})
+    switch state.user {
+    | Some(_user) =>
+      switch action {
+      | ShowHome => ReasonReact.Update({...state, view: Home})
+      | ShowFile(id) => ReasonReact.Update({...state, view: File(id)})
+      | ShowFolder(id) => ReasonReact.Update({...state, view: Folder(id)})
+      | ClientReady(api_client) => ReasonReact.Update({...state, api_client: Some(api_client)})
+      | Login(_user) => ReasonReact.NoUpdate
+      | Logout => ReasonReact.Update({...state, user: None})
+      }
+    | None =>
+      switch action {
+      | Login(user) => ReasonReact.Update({...state, user: Some(user)})
+      | _ => ReasonReact.NoUpdate
+      }
     },
   subscriptions: (self) => [
     Sub(
@@ -34,28 +58,13 @@ let make = (_children) => {
         ReasonReact.Router.watchUrl(
           (url) =>
             switch url.path {
-            | [folder] => self.send(ShowView(Folder(folder)))
-            | _ => self.send(ShowView(Main))
+            | ["file", file] => self.send(ShowFile(file))
+            | ["folder", folder] => self.send(ShowFolder(folder))
+            | _ => self.send(ShowHome)
             }
         ),
       ReasonReact.Router.unwatchUrl
     )
   ],
-  render: (self) =>
-    <GoogleData>
-      ...(
-           (user, login, get_files_in_folder, get_recent_files) =>
-             <App
-               current_dir="root"
-               user
-               login
-               get_files_in_folder
-               get_recent_files
-               current_file=self.state.current_file
-               select_file=((file) => self.send(SelectFile(file)))
-               open_menu=((_a) => ())
-               start_search=((_a) => ())
-             />
-         )
-    </GoogleData>
+  render: (self) => <App user login />
 };
