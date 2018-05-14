@@ -9,8 +9,6 @@ import * as Preview$Drive from "./Preview.bs.js";
 import * as FolderView$Drive from "./FolderView.bs.js";
 import * as LocalCache$Drive from "./LocalCache.bs.js";
 
-(( require('./basscss.css') ));
-
 (( require('./App.css') ));
 
 var google_button = ( require('../images/google-button.svg') );

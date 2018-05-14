@@ -1,7 +1,5 @@
 open Utils;
 
-[%bs.raw {| require('./basscss.css') |}];
-
 [%bs.raw {| require('./App.css') |}];
 
 let google_button = [%bs.raw {| require('../images/google-button.svg') |}];

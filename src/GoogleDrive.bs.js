@@ -4,6 +4,18 @@ import * as $$Array from "bs-platform/lib\\es6/array.js";
 import * as Curry from "bs-platform/lib\\es6/curry.js";
 import * as $$String from "bs-platform/lib\\es6/string.js";
 
+function fileToJs(param) {
+  return {
+          id: param[/* id */0],
+          name: param[/* name */1],
+          modifiedTime: param[/* modifiedTime */2],
+          webViewLink: param[/* webViewLink */3],
+          webContentLink: param[/* webContentLink */4],
+          iconLink: param[/* iconLink */5],
+          mimeType: param[/* mimeType */6]
+        };
+}
+
 function fileFromJs(param) {
   return /* record */[
           /* id */param.id,
@@ -16,6 +28,15 @@ function fileFromJs(param) {
         ];
 }
 
+function userToJs(param) {
+  return {
+          id: param[/* id */0],
+          name: param[/* name */1],
+          imageUrl: param[/* imageUrl */2],
+          email: param[/* email */3]
+        };
+}
+
 function userFromJs(param) {
   return /* record */[
           /* id */param.id,
@@ -25,12 +46,14 @@ function userFromJs(param) {
         ];
 }
 
+var read_scope = "https://www.googleapis.com/auth/drive.readonly";
+
 function init(callback) {
   window.gapi.load("client:auth2", (function () {
           window.gapi.client.init({
                   apiKey: "process.env.API_KEY",
                   clientId: "process.env.CLIENT_ID",
-                  scope: "https://www.googleapis.com/auth/drive.readonly"
+                  scope: read_scope
                 }).then((function () {
                   Curry._1(callback, /* ApiClient */0);
                   return Promise.resolve(/* () */0);
@@ -58,9 +81,14 @@ function listen_user_changes(_, callback) {
               }));
 }
 
-function login() {
+function login(_, callback) {
   var auth_instance = window.gapi.auth2.getAuthInstance();
-  return auth_instance.signIn();
+  auth_instance.signIn().then((function (google_user) {
+          var user = user_to_profile(google_user);
+          Curry._1(callback, user);
+          return Promise.resolve(/* () */0);
+        }));
+  return /* () */0;
 }
 
 function fetch_files(client, params, callback) {
@@ -126,10 +154,20 @@ function files_in_folder(client, folder_id, callback) {
   return fetch_files(client, params, callback);
 }
 
+var write_scope = "https://www.googleapis.com/auth/drive";
+
 export {
+  fileToJs ,
+  fileFromJs ,
+  userToJs ,
+  userFromJs ,
+  read_scope ,
+  write_scope ,
   init ,
+  user_to_profile ,
   listen_user_changes ,
   login ,
+  fetch_files ,
   recent_files ,
   files_in_folder ,
   

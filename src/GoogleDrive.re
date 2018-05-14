@@ -24,7 +24,10 @@ type current_google_user = {
   "get": [@bs.meth] (unit => google_user), "listen": [@bs.meth] ((google_user => unit) => unit)
 };
 
-type auth_instance = {. "currentUser": current_google_user, "signIn": [@bs.meth] (unit => Js.Promise.t(google_user)};
+type auth_instance = {
+  .
+  "currentUser": current_google_user, "signIn": [@bs.meth] (unit => Js.Promise.t(google_user))
+};
 
 type api_result = {. "nextPageToken": Js.nullable(string), "files": Js.Array.t(abs_file)};
 
@@ -91,11 +94,15 @@ let listen_user_changes = (_client: api_client, callback) => {
 
 let login = (_client: api_client, callback) => {
   let auth_instance = get_auth_instance();
-  auth_instance##signIn() |> Js.Promise.then_((google_user) => {
-    let user = user_to_profile(google_user);
-    callback(user);
-    Js.Promise.resolve()
-  })
+  auth_instance##signIn()
+  |> Js.Promise.then_(
+       (google_user) => {
+         let user = user_to_profile(google_user);
+         callback(user);
+         Js.Promise.resolve()
+       }
+     )
+  |> ignore
 };
 
 let rec fetch_files = (client: api_client, params, callback: array(file) => unit) : unit => {

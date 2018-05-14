@@ -2,10 +2,26 @@
 
 import * as Block from "bs-platform/lib\\es6/block.js";
 import * as Curry from "bs-platform/lib\\es6/curry.js";
-import * as App$Drive from "./App.bs.js";
+import * as React from "react";
 import * as ReasonReact from "reason-react/src/ReasonReact.js";
-import * as GoogleData$Drive from "./GoogleData.bs.js";
 import * as GoogleDrive$Drive from "../GoogleDrive.bs.js";
+
+(( require('./basscss.css') ));
+
+function login(send, state) {
+  var match = state[/* api_client */1];
+  if (match) {
+    return GoogleDrive$Drive.login(match[0], (function (user) {
+                  if (user) {
+                    return Curry._1(send, /* Login */Block.__(3, [user[0]]));
+                  } else {
+                    return /* () */0;
+                  }
+                }));
+  } else {
+    return /* () */0;
+  }
+}
 
 var component = ReasonReact.reducerComponent("EasyDrive");
 
@@ -14,49 +30,70 @@ function make() {
   newrecord[/* didMount */4] = (function () {
       return /* SideEffects */Block.__(2, [(function (self) {
                     return GoogleDrive$Drive.init((function (api_client) {
-                                  return Curry._1(self[/* send */4], /* UpdateClient */Block.__(1, [api_client]));
+                                  return Curry._1(self[/* send */4], /* ClientReady */Block.__(2, [api_client]));
                                 }));
                   })]);
     });
-  newrecord[/* render */9] = (function (self) {
-      return ReasonReact.element(/* None */0, /* None */0, GoogleData$Drive.make((function (user, login, get_files_in_folder, get_recent_files) {
-                        return ReasonReact.element(/* None */0, /* None */0, App$Drive.make(user, self[/* state */2][/* current_file */2], "root", (function (file) {
-                                          return Curry._1(self[/* send */4], /* SelectFile */Block.__(2, [file]));
-                                        }), get_files_in_folder, get_recent_files, login, (function () {
-                                          return /* () */0;
-                                        }), (function () {
-                                          return /* () */0;
-                                        }), /* array */[]));
-                      })));
+  newrecord[/* render */9] = (function () {
+      return React.createElement("div", undefined);
     });
   newrecord[/* initialState */10] = (function () {
       return /* record */[
-              /* view : Main */0,
+              /* view : Home */0,
               /* api_client : None */0,
-              /* current_file : None */0
+              /* user : None */0
             ];
     });
   newrecord[/* reducer */12] = (function (action, state) {
-      switch (action.tag | 0) {
-        case 0 : 
+      var match = state[/* user */2];
+      if (match) {
+        if (typeof action === "number") {
+          if (action === 0) {
             return /* Update */Block.__(0, [/* record */[
-                        /* view */action[0],
+                        /* view : Home */0,
                         /* api_client */state[/* api_client */1],
-                        /* current_file */state[/* current_file */2]
+                        /* user */state[/* user */2]
                       ]]);
-        case 1 : 
-            return /* Update */Block.__(0, [/* record */[
-                        /* view */state[/* view */0],
-                        /* api_client : Some */[action[0]],
-                        /* current_file */state[/* current_file */2]
-                      ]]);
-        case 2 : 
+          } else {
             return /* Update */Block.__(0, [/* record */[
                         /* view */state[/* view */0],
                         /* api_client */state[/* api_client */1],
-                        /* current_file : Some */[action[0]]
+                        /* user : None */0
                       ]]);
-        
+          }
+        } else {
+          switch (action.tag | 0) {
+            case 0 : 
+                return /* Update */Block.__(0, [/* record */[
+                            /* view : File */Block.__(0, [action[0]]),
+                            /* api_client */state[/* api_client */1],
+                            /* user */state[/* user */2]
+                          ]]);
+            case 1 : 
+                return /* Update */Block.__(0, [/* record */[
+                            /* view : Folder */Block.__(1, [action[0]]),
+                            /* api_client */state[/* api_client */1],
+                            /* user */state[/* user */2]
+                          ]]);
+            case 2 : 
+                return /* Update */Block.__(0, [/* record */[
+                            /* view */state[/* view */0],
+                            /* api_client : Some */[action[0]],
+                            /* user */state[/* user */2]
+                          ]]);
+            case 3 : 
+                return /* NoUpdate */0;
+            
+          }
+        }
+      } else if (typeof action === "number" || action.tag !== 3) {
+        return /* NoUpdate */0;
+      } else {
+        return /* Update */Block.__(0, [/* record */[
+                    /* view */state[/* view */0],
+                    /* api_client */state[/* api_client */1],
+                    /* user : Some */[action[0]]
+                  ]]);
       }
     });
   newrecord[/* subscriptions */13] = (function (self) {
@@ -66,13 +103,26 @@ function make() {
                     return ReasonReact.Router[/* watchUrl */1]((function (url) {
                                   var match = url[/* path */0];
                                   if (match) {
-                                    if (match[1]) {
-                                      return Curry._1(self[/* send */4], /* ShowView */Block.__(0, [/* Main */0]));
-                                    } else {
-                                      return Curry._1(self[/* send */4], /* ShowView */Block.__(0, [/* Folder */[match[0]]]));
+                                    switch (match[0]) {
+                                      case "file" : 
+                                          var match$1 = match[1];
+                                          if (match$1 && !match$1[1]) {
+                                            return Curry._1(self[/* send */4], /* ShowFile */Block.__(0, [match$1[0]]));
+                                          } else {
+                                            return Curry._1(self[/* send */4], /* ShowHome */0);
+                                          }
+                                      case "folder" : 
+                                          var match$2 = match[1];
+                                          if (match$2 && !match$2[1]) {
+                                            return Curry._1(self[/* send */4], /* ShowFolder */Block.__(1, [match$2[0]]));
+                                          } else {
+                                            return Curry._1(self[/* send */4], /* ShowHome */0);
+                                          }
+                                      default:
+                                        return Curry._1(self[/* send */4], /* ShowHome */0);
                                     }
                                   } else {
-                                    return Curry._1(self[/* send */4], /* ShowView */Block.__(0, [/* Main */0]));
+                                    return Curry._1(self[/* send */4], /* ShowHome */0);
                                   }
                                 }));
                   }),
@@ -85,8 +135,9 @@ function make() {
 }
 
 export {
+  login ,
   component ,
   make ,
   
 }
-/* component Not a pure module */
+/*  Not a pure module */

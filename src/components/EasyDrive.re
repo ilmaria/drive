@@ -19,12 +19,21 @@ type state = {
   user: option(GoogleDrive.user)
 };
 
-let login = (send, state) => {
+[%bs.raw {| require('./basscss.css') |}];
+
+let login = (send, state) =>
   switch state.api_client {
-  | Some(api_client) => GoogleDrive.login(api_client, (user) => send(Login(user)))
+  | Some(api_client) =>
+    GoogleDrive.login(
+      api_client,
+      (user) =>
+        switch user {
+        | Some(user) => send(Login(user))
+        | None => ()
+        }
+    )
   | None => ()
   };
-};
 
 let component = ReasonReact.reducerComponent("EasyDrive");
 
@@ -66,5 +75,5 @@ let make = (_children) => {
       ReasonReact.Router.unwatchUrl
     )
   ],
-  render: (self) => <App user login />
+  render: (self) => <div /> /*<App user login />*/
 };
